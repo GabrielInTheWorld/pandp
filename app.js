@@ -25,7 +25,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.use('/', (req, res) => {
+  res.send("Hello World!")
+    console.log("Hello")
+});
 app.use('/users', users);
 
 // app.set("port", process.env.PORT || 4000)
