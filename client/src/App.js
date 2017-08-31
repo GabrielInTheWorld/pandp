@@ -4,7 +4,7 @@ import io from 'socket.io-client'
 import './App.css';
 
 // self = null
-const socket = io("http://localhost:3001")
+const socket = io()
 
 class App extends Component {
     state = {
