@@ -1,10 +1,15 @@
 var express = require('express');
 var path = require("path")
+const http = require("http")
 const generatePassword = require("password-generator")
+const SocketServer = require('ws').Server
+const socketIO = require("socket.io")
+const cors = require("cors")
 
 const app = express()
 
 app.use(express.static(path.join(__dirname, "/client/build")))
+app.use(cors())
 
 app.get("/api/passwords", (req, res) => {
     const count = 5
@@ -16,12 +21,35 @@ app.get("/api/passwords", (req, res) => {
     console.log("Sent ${count} passwords")
 })
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join (__dirname + "/client/build/index.html"))
-})
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join (__dirname + "/client/build/index.html"))
+// })
 
+const index = path.join(__dirname + "/client/build/index.html")
 const port = process.env.PORT || 3001
-app.listen(port)
+app.use((req, res) => res.sendFile(index))
+// app.listen(port)
+// const server = http.createServer(app)
+const server = app.listen(port)
+
+const io = socketIO(server)
+io.on("connection", (socket) => {
+    console.log("Client connected.")
+    socket.on("disconnect", () => "Client disconnected.")
+})
+// const wss = new SocketServer({server: server, path: "/"})
+//
+// wss.on('connection', (ws) => {
+//     console.log("Client connected")
+//     ws.on('close', () => console.log("Client disconnected"))
+// })
+//
+setInterval(() =>
+    // wss.clients.forEach((client) => {
+    //     client.send(new Date().toTimeString())
+    // })
+    io.emit("time", new Date().toTimeString())
+, 1000)
 
 console.log("Password generator listening on ${port}")
 

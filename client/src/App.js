@@ -1,17 +1,37 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
+import io from 'socket.io-client'
 import './App.css';
 
 // self = null
+const socket = io("http://localhost:3001")
 
 class App extends Component {
     state = {
-        passwords: []
+        passwords: [],
+        data: {}
     }
 
     //Fetch the passwords from server after first mount
     componentDidMount(){
+        console.log("socket: ", socket)
         this.getPasswords()
+
+        var elem = this.refs.serverTime
+        // var socket = io()
+        socket.on("time", function(timeString){
+            elem.innerText = "Servertime: " + timeString
+            // console.log("logged in to server at: ", timeString)
+        })
+
+        // var elem = this.getElementById("serverTime")
+        // console.log("serverTime: ", this.refs.serverTime.innerText)
+        // var HOST = location.origin.replace(/^http/, "ws")
+        // var ws = new WebSocket(HOST)
+        //
+        // ws.onmessage = function(event) {
+        //     this.serverTime.innerHTML = "Servertime: " + event.data
+        // }
         // console.log("componentDidMount", this)
         // self = this
     }
@@ -58,6 +78,8 @@ class App extends Component {
                     </div>
                 )
                 }
+                <p id="servertime"
+                    ref="serverTime">Servertime: </p>
             </div>
         )
       }
