@@ -1,21 +1,27 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
 import io from 'socket.io-client'
+import {Button, FormControl, ListGroup, ListGroupItem, Grid, Col, Row} from 'react-bootstrap'
+
 import './App.css';
 
+import Dialog from './components/Dialog'
+// import CloseButton from "react-error-overlay/lib/components/CloseButton";
 // self = null
 const socket = io()
 
 class App extends Component {
     state = {
         passwords: [],
-        data: {}
+        data: {},
+        username: "",
+        showModal: true,
+        listItems: []
     }
 
-    //Fetch the passwords from server after first mount
     componentDidMount(){
+        this.handleOnReceiveMessage()
         console.log("socket: ", socket)
-        this.getPasswords()
 
         var elem = this.refs.serverTime
         // var socket = io()
@@ -23,63 +29,114 @@ class App extends Component {
             elem.innerText = "Servertime: " + timeString
             // console.log("logged in to server at: ", timeString)
         })
-
-        // var elem = this.getElementById("serverTime")
-        // console.log("serverTime: ", this.refs.serverTime.innerText)
-        // var HOST = location.origin.replace(/^http/, "ws")
-        // var ws = new WebSocket(HOST)
-        //
-        // ws.onmessage = function(event) {
-        //     this.serverTime.innerHTML = "Servertime: " + event.data
-        // }
-        // console.log("componentDidMount", this)
-        // self = this
     }
 
-    getPasswords = () => {
-        // console.log("getPasswords: ", this)
-        fetch('/api/passwords')
-            .then(res => res.json())
-            .then(passwords => this.setState({
-                passwords: passwords
-            }))
+    /**
+     * handle socket messages and dialog
+     */
+    handleOnReceiveMessage(){
+        socket.on("username", (user) => {
+            console.log("received User: ", user)
+            this.getListItem(user)
+        })
     }
 
+    // getPasswords = () => {
+    //     // console.log("getPasswords: ", this)
+    //     fetch('/api/passwords')
+    //         .then(res => res.json())
+    //         .then(passwords => this.setState({
+    //             passwords: passwords
+    //         }))
+    // }
+
+    onChangeUsername = (username) => {
+        // console.log("user: ", username)
+        this.setState({username: username})
+        // console.log("username: ", this.state.username)
+    }
+
+    confirmUsername(){
+        if(this.state.username){
+            // console.log("Username: ", this.state.username)
+            socket.emit("username", this.state.username)
+            this.onClose()
+        }
+    }
+
+    onClose(){
+        this.setState({
+            showModal: false
+        })
+    }
+
+    /**
+     * end of handling
+     */
+    onClickUser(e){
+        console.log("You've clicked on ...", e)
+        this.onOpenChatbox()
+    }
+
+    onOpenChatbox(){
+
+    }
+
+    getListItem(username){
+        var user = username
+        var array = this.state.listItems
+        const element = (
+            <ListGroupItem
+                onClick={() => this.onClickUser(user)}
+                key={username}>
+                {username}
+            </ListGroupItem>
+        )
+        array.push(element)
+        this.setState({listItems: array})
+    }
+
+    /**
+     * render the page
+     * @returns {XML}
+     */
     render() {
-        // console.log("render", this)
-        const {passwords} = this.state
+        const body = (
+            <div>
+                <FormControl
+                    type="text"
+                    placeholder="Dein Nutzername:"
+                    onChange={(e) => this.onChangeUsername(e.target.value)} />
+            </div>
+        )
+        const footer = (
+            <div>
+                <Button
+                    bsStyle="success"
+                    onClick={() => this.confirmUsername()}>
+                    Bestätigen
+                </Button>
+            </div>
+        )
 
         return(
             <div className="App">
-                {passwords.length ? (
-                    <div>
-                        <h1>5 Passwords</h1>
-                        <ul className="passwords">
-                            {passwords.map((password, index) =>
-                                <li key={index}>
-                                    {password}
-                                </li>
-                            )}
-                        </ul>
-                        <button
-                            className="more"
-                            onClick={this.getPasswords}>
-                            Get more!
-                        </button>
-                    </div>
-                ) : (
-                    <div>
-                        <h1>No passwords :(</h1>
-                        <button
-                            className="more"
-                            onClick={this.getPasswords}>
-                            Try again?
-                        </button>
-                    </div>
-                )
-                }
+
+                <Dialog showModal={this.state.showModal} title="Bitte gib deinen Nutzernamen ein:" body={body} footer={footer}/>
+
+                <h1>Cooles Pen and Paper Dashboard</h1>
                 <p id="servertime"
                     ref="serverTime">Servertime: </p>
+
+                <Grid>
+                    <Row>
+                        <Col md={4}>
+                            <ListGroup componentClass="ul">
+                                {this.state.listItems}
+                            </ListGroup>
+                        </Col>
+                    </Row>
+                </Grid>
             </div>
         )
       }

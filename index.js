@@ -35,7 +35,11 @@ const server = app.listen(port)
 const io = socketIO(server)
 io.on("connection", (socket) => {
     console.log("Client connected.")
-    socket.on("disconnect", () => "Client disconnected.")
+    socket.on("username", (user) => {
+        console.log("User: ", user)
+        socket.broadcast.emit("username", user)
+    })
+    socket.on("disconnect", () => console.log("Client disconnected."))
 })
 // const wss = new SocketServer({server: server, path: "/"})
 //
