@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
 import io from 'socket.io-client'
-import {Button, FormControl, ListGroup, ListGroupItem, Grid, Col, Row} from 'react-bootstrap'
+import {Button, FormControl, FormGroup, ListGroup, ListGroupItem, Grid, Col, Row, Panel} from 'react-bootstrap'
 
 import './App.css';
 
@@ -15,6 +15,7 @@ class App extends Component {
         passwords: [],
         data: {},
         username: "",
+        loggedIn: "",
         showModal: true,
         listItems: []
     }
@@ -32,7 +33,7 @@ class App extends Component {
     }
 
     /**
-     * handle socket messages and dialog
+     * handle socket messages
      */
     handleOnReceiveMessage(){
         socket.on("username", (user) => {
@@ -50,16 +51,28 @@ class App extends Component {
     //         }))
     // }
 
+    /**
+     * handle dialog input and buttons
+     * @param username
+     */
     onChangeUsername = (username) => {
         // console.log("user: ", username)
         this.setState({username: username})
         // console.log("username: ", this.state.username)
     }
 
+    getValidationState(){
+        const length = this.state.username.length
+        if(length >= 8) return "success"
+        else if(length >= 4) return "warning"
+        else if(length >= 0) return "error"
+    }
+
     confirmUsername(){
-        if(this.state.username){
+        if(this.state.username && this.state.username.length >= 4){
             // console.log("Username: ", this.state.username)
             socket.emit("username", this.state.username)
+            this.setState({loggedIn: this.state.username})
             this.onClose()
         }
     }
@@ -102,12 +115,17 @@ class App extends Component {
      */
     render() {
         const body = (
-            <div>
-                <FormControl
-                    type="text"
-                    placeholder="Dein Nutzername:"
-                    onChange={(e) => this.onChangeUsername(e.target.value)} />
-            </div>
+            <form>
+                <FormGroup
+                    controlId="usernameInput"
+                    validationState={this.getValidationState()}>
+                    <FormControl
+                        type="text"
+                        placeholder="Dein Nutzername:"
+                        onChange={(e) => this.onChangeUsername(e.target.value)} />
+                    <FormControl.Feedback />
+                </FormGroup>
+            </form>
         )
         const footer = (
             <div>
@@ -130,8 +148,16 @@ class App extends Component {
 
                 <Grid>
                     <Row>
-                        <Col md={4}>
-                            <ListGroup componentClass="ul">
+                        <Col md={3}>
+                            <Panel header="Du bist eingeloggt als:">
+                                {this.state.loggedIn}
+                            </Panel>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={3}>
+                            <ListGroup id="memberList" componentClass="ul">
+                                <div className="bigFont">Eingeloggte Mitglieder</div>
                                 {this.state.listItems}
                             </ListGroup>
                         </Col>

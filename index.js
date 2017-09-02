@@ -33,13 +33,25 @@ app.use((req, res) => res.sendFile(index))
 const server = app.listen(port)
 
 const io = socketIO(server)
+var allClients = []
 io.on("connection", (socket) => {
+    allClients.push(socket)
     console.log("Client connected.")
+
+
     socket.on("username", (user) => {
         console.log("User: ", user)
         socket.broadcast.emit("username", user)
     })
-    socket.on("disconnect", () => console.log("Client disconnected."))
+    socket.on("disconnect", () => {
+        // socket.broadcast.emit("disconnected")
+        console.log("Client disconnected.")
+
+        var i = allClients.indexOf(socket)
+        allClients.splice(i, 1)
+
+        // console.log("allClients: ", allClients)
+    })
 })
 // const wss = new SocketServer({server: server, path: "/"})
 //

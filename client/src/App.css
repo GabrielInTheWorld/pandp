@@ -1,3 +1,7 @@
+h1, p{
+    color: white;
+}
+
 .App {
   text-align: center;
 }
@@ -21,4 +25,14 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+#memberList{
+  min-height: 100px;
+  border: 1px solid #cccccc;
+}
+
+.bigFont{
+  font-size: large;
+  color: white;
 }
