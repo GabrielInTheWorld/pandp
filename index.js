@@ -34,13 +34,19 @@ const server = app.listen(port)
 
 const io = socketIO(server)
 var allClients = []
+var allUsers = []
 io.on("connection", (socket) => {
     allClients.push(socket)
     console.log("Client connected.")
+    // socket.emit()
+    for(var i = 0; i < allUsers.length; ++i){
+        socket.emit("username", allUsers[i])
+    }
 
 
     socket.on("username", (user) => {
         console.log("User: ", user)
+        allUsers.push(user)
         socket.broadcast.emit("username", user)
     })
     socket.on("disconnect", () => {
@@ -49,8 +55,9 @@ io.on("connection", (socket) => {
 
         var i = allClients.indexOf(socket)
         allClients.splice(i, 1)
+        allUsers.splice(i, 1)
 
-        // console.log("allClients: ", allClients)
+        console.log("allClients: ", allClients.length, allUsers)
     })
 })
 // const wss = new SocketServer({server: server, path: "/"})

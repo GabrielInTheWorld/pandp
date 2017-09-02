@@ -4,8 +4,8 @@ import * as bootstrap from 'react-bootstrap'
 const Modal = bootstrap.Modal
 const Popover = bootstrap.Popover
 const Tooltip = bootstrap.Tooltip
-const Button = bootstrap.Button
-const OverlayTrigger = bootstrap.OverlayTrigger
+// const Button = bootstrap.Button
+// const OverlayTrigger = bootstrap.OverlayTrigger
 
 export default class Dialog extends Component{
     state = {
