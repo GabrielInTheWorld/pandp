@@ -41,6 +41,12 @@ class App extends Component {
             console.log("received User: ", user)
             this.getListItem(user)
         })
+
+        socket.on("allUsers", (allUsers) => {
+            for(var i = 0; i < allUsers.length; ++i){
+                this.getListItem(allUsers[i])
+            }
+        })
     }
 
     // getPasswords = () => {

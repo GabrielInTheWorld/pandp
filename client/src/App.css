@@ -37,6 +37,12 @@ h1, p{
   color: white;
 }
 
+.newLine{
+  width: 100%;
+  display: block;
+  margin-top: 10px;
+}
+
 #rowOfDice{
   padding-top: 75px;
   padding-bottom: 75px;
@@ -49,9 +55,10 @@ h1, p{
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   border-radius: 12px;
-  padding:75px;
+  padding:50px;
   display: inline;
   margin: 5px;
+  font-weight:700;
 }
 
 .react-stepper{

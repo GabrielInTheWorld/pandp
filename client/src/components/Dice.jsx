@@ -3,11 +3,16 @@ import '../App.css'
 
 export default class Dice extends React.Component{
     state = {
-        value: -99
+        value: 0
     }
 
-    willReceiveNewProps(newProps){
-        console.log("newProps: ", newProps)
+    componentDidMount(){
+        this.setState({value: this.props.value})
+    }
+
+    componentWillReceiveProps(newProps){
+        // console.log("newProps: ", newProps)
+        this.setState({value: newProps.value})
     }
 
     render(){

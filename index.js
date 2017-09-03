@@ -58,6 +58,7 @@ io.on("connection", (socket) => {
         allUsers.splice(i, 1)
 
         console.log("allClients: ", allClients.length, allUsers)
+        socket.broadcast.emit("allUsers", allUsers)
     })
 })
 // const wss = new SocketServer({server: server, path: "/"})
