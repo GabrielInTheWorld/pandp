@@ -6,6 +6,7 @@ import {Button, FormControl, FormGroup, ListGroup, ListGroupItem, Grid, Col, Row
 import './App.css';
 
 import Dialog from './components/Dialog'
+import DiceTable from './components/DiceTable'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
 // self = null
 const socket = io()
@@ -160,6 +161,9 @@ class App extends Component {
                                 <div className="bigFont">Eingeloggte Mitglieder</div>
                                 {this.state.listItems}
                             </ListGroup>
+                        </Col>
+                        <Col md={6}>
+                            <DiceTable/>
                         </Col>
                     </Row>
                 </Grid>
