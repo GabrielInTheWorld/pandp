@@ -1,8 +1,8 @@
-var express = require('express');
-var path = require("path")
+const express = require('express');
+const path = require("path")
 const http = require("http")
 const generatePassword = require("password-generator")
-const SocketServer = require('ws').Server
+// const SocketServer = require('ws').Server
 const socketIO = require("socket.io")
 const cors = require("cors")
 
@@ -55,6 +55,12 @@ io.on("connection", (socket) => {
         // console.log("data: ", data)
         socket.broadcast.emit("message", data)
     })
+
+    socket.on("Role", (data) => {
+        console.log("received role: ", data)
+        socket.emit("Role", data.role)
+    })
+
     socket.on("disconnect", () => {
         // socket.broadcast.emit("disconnected")
         console.log("Client disconnected.")

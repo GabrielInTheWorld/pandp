@@ -6,6 +6,7 @@ import {Button, FormControl, FormGroup, ListGroup, ListGroupItem, Grid, Col, Row
 import './App.css';
 
 import Dialog from './components/Dialog'
+import GamerDialog from './components/GamerDialog'
 import DiceTable from './components/DiceTable'
 import ChatBox from './components/ChatBox'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
@@ -18,7 +19,9 @@ class App extends Component {
         data: {},
         username: "",
         loggedIn: "",
+        role: "",
         showModal: true,
+        showGamerDialog: false,
         listItems: [],
         amountOfMembers: 0,
         listMembers: []
@@ -28,7 +31,7 @@ class App extends Component {
         this.handleOnReceiveMessage()
         console.log("socket: ", socket)
 
-        var elem = this.refs.serverTime
+        let elem = this.refs.serverTime
         // var socket = io()
         socket.on("time", function(timeString){
             elem.innerText = "Servertime: " + timeString
@@ -48,7 +51,7 @@ class App extends Component {
         socket.on("allUsers", (allUsers) => {
             this.setState({listItems: []})
             console.log("received allUsers: ", allUsers, this.state.listItems)
-            for(var i = 0; i < allUsers.length; ++i){
+            for(let i = 0; i < allUsers.length; ++i){
                 if(allUsers[i] !== this.state.loggedIn)
                     this.getListItem(allUsers[i])
             }
@@ -58,6 +61,10 @@ class App extends Component {
             // console.log("received data: ", data)
             if(this.state.loggedIn === data.user)
                 this.onReceiveMessage(data)
+        })
+
+        socket.on("Role", (role) => {
+            this.setState({showGamerDialog: false, role: role})
         })
     }
 
@@ -102,12 +109,19 @@ class App extends Component {
             socket.emit("username", this.state.username)
             this.setState({loggedIn: this.state.username})
             this.onClose()
+            this.openGamerDialog()
         }
     }
 
     onClose(){
         this.setState({
             showModal: false
+        })
+    }
+
+    openGamerDialog(){
+        this.setState({
+            showGamerDialog: true
         })
     }
 
@@ -132,8 +146,8 @@ class App extends Component {
     }
 
     getListItem(username){
-        var user = username
-        var array = this.state.listItems
+        let user = username
+        let array = this.state.listItems
         const element = (
             <ListGroupItem
                 onClick={() => this.onClickUser(user)}
@@ -177,6 +191,7 @@ class App extends Component {
             <div className="App">
 
                 <Dialog showModal={this.state.showModal} title="Bitte gib deinen Nutzernamen ein:" body={body} footer={footer}/>
+                <GamerDialog show={this.state.showGamerDialog} username={this.state.loggedIn} socket={socket} />
 
                 <h1>Krasses Pen and Paper Dashboard</h1>
                 <p id="servertime"
@@ -186,7 +201,7 @@ class App extends Component {
                     <Row>
                         <Col md={3}>
                             <Panel header="Du bist eingeloggt als:">
-                                {this.state.loggedIn}
+                                {this.state.loggedIn}, {this.state.role}
                             </Panel>
                         </Col>
                     </Row>

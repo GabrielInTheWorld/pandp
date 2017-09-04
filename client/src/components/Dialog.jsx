@@ -40,7 +40,7 @@ export default class Dialog extends Component{
         return(
             <div>
                 <Modal show={this.state.showModal}>
-                    <Modal.Header closeButton>
+                    <Modal.Header>
                         <Modal.Title>{this.props.title}</Modal.Title>
                         {this.props.header}
                     </Modal.Header>
