@@ -47,6 +47,7 @@ class App extends Component {
 
         socket.on("allUsers", (allUsers) => {
             this.setState({listItems: []})
+            console.log("received allUsers: ", allUsers, this.state.listItems)
             for(var i = 0; i < allUsers.length; ++i){
                 if(allUsers[i] !== this.state.loggedIn)
                     this.getListItem(allUsers[i])

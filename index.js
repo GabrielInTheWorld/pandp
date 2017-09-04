@@ -36,7 +36,7 @@ const io = socketIO(server)
 var allClients = []
 var allUsers = []
 io.on("connection", (socket) => {
-    allClients.push(socket)
+    // allClients.push(socket)
     console.log("Client connected.")
     // socket.emit()
     for(var i = 0; i < allUsers.length; ++i){
@@ -46,6 +46,7 @@ io.on("connection", (socket) => {
 
     socket.on("username", (user) => {
         console.log("User: ", user)
+        allClients.push(socket)
         allUsers.push(user)
         socket.broadcast.emit("username", user)
     })
@@ -59,6 +60,7 @@ io.on("connection", (socket) => {
         console.log("Client disconnected.")
 
         var i = allClients.indexOf(socket)
+        console.log("Client disconnected: ", i, allUsers)
         allClients.splice(i, 1)
         allUsers.splice(i, 1)
 
