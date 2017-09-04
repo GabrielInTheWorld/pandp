@@ -48,7 +48,7 @@ export default class Chat extends Component{
 
         socket.on("rollDice", (data) => {
             console.log("rollDice: ", data)
-            if(this.state.role === "Meister"){
+            if(this.state.role === "Meister" && this.state.username !== data.emitter){
                 this.onReceiveMessage(data)
             }else if(this.state.username === data.emitter){
                 this.onRollDiceMessage(data.message)
