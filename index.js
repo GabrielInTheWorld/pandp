@@ -5,11 +5,15 @@ const generatePassword = require("password-generator")
 // const SocketServer = require('ws').Server
 const socketIO = require("socket.io")
 const cors = require("cors")
+const formidable = require("formidable")
+const fs = require("fs")
+const busBoy = require("connect-busboy")
 
 const app = express()
 
 app.use(express.static(path.join(__dirname, "/client/build")))
 app.use(cors())
+app.use(busBoy())
 
 app.get("/api/passwords", (req, res) => {
     const count = 5
@@ -28,6 +32,20 @@ app.get("/api/passwords", (req, res) => {
 const index = path.join(__dirname + "/client/build/index.html")
 const port = process.env.PORT || 3001
 app.use((req, res) => res.sendFile(index))
+app.post("/upload", (req, res, next) => {
+    var form = new formidable.IncomingForm()
+
+    form.keepExtensions = true
+    form.parse(req, (err, fields, files) => {
+        var tempFilePath = files.file['path']
+        var userFileName = files.file['name']
+        var contentType = files.file['type']
+
+        fs.readFile("./files", function(err, file_buffer){
+            console.log("file_buffer: ", file_buffer)
+        })
+    })
+})
 // app.listen(port)
 // const server = http.createServer(app)
 const server = app.listen(port)

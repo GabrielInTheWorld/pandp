@@ -105,7 +105,7 @@ export default class DiceTable extends Component{
                     <Col md={3} xs={5}>
                         <FormGroup>
                             <ControlLabel className="alignLeft">Art des Würfels:</ControlLabel>
-                            <FormControl defaultValue="d10" componentClass="select" placeholder="Würfel" onChange={(e) => this.changeKindDice(e)}>
+                            <FormControl defaultValue="W10" componentClass="select" placeholder="Würfel" onChange={(e) => this.changeKindDice(e)}>
                                 <option value="W4">W4</option>
                                 <option value="W6">W6</option>
                                 <option value="W8">W8</option>

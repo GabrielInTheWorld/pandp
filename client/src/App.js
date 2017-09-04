@@ -7,6 +7,7 @@ import './App.css';
 
 import Dialog from './components/Dialog'
 import GamerDialog from './components/GamerDialog'
+import CharacterContainer from './components/CharacterContainer'
 import DiceTable from './components/DiceTable'
 import ChatBox from './components/ChatBox'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
@@ -222,11 +223,19 @@ class App extends Component {
                     ref="serverTime">Servertime: </p>
 
                 <Grid>
+                    <Row id="topRow">
+                        <Col id="fileComponent" md={9}>
+                            <CharacterContainer/>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col md={3}>
                             <Panel header="Du bist eingeloggt als:">
                                 {this.state.loggedIn}, {this.state.role}
                             </Panel>
+                        </Col>
+                        <Col md={6}>
+                            <DiceTable socket={socket} username={this.state.loggedIn} />
                         </Col>
                     </Row>
                     <Row>
@@ -237,11 +246,11 @@ class App extends Component {
                             </ListGroup>
                         </Col>
                         <Col md={6}>
-                            <DiceTable socket={socket} username={this.state.loggedIn} />
+                            <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} role={this.state.role} socket={socket} />
                         </Col>
                     </Row>
                     <Row>
-                        <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} role={this.state.role} socket={socket} />
+
                     </Row>
                 </Grid>
             </div>

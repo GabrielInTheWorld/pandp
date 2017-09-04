@@ -1,0 +1,39 @@
+.fileContainer{
+    width: 76%;
+    border: 2px solid #CCCCCC;
+    background-color: #4f4f4f;
+    height: 150px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+#fileUploadCharacterSheet{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#fileUploader{
+    text-align: center;
+    /*width: 55px;*/
+    border: 1px solid #FFF;
+    padding-left: 12px;
+    padding-right: 12px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    /*padding: 0px;*/
+    font-size: 30px;
+    font-weight: 700;
+    color: white;
+    display: inline-block;
+    background-color: #33CC33;
+}
+
+#fileUploader:hover{
+    background-color: #093;
+    cursor: pointer;
+}
