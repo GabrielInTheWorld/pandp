@@ -20,6 +20,7 @@ class App extends Component {
         username: "",
         loggedIn: "",
         role: "",
+        master: "",
         showModal: true,
         showGamerDialog: false,
         listItems: [],
@@ -66,6 +67,23 @@ class App extends Component {
         socket.on("Role", (role) => {
             this.setState({showGamerDialog: false, role: role})
         })
+
+        socket.on("masterIsChosen", (user) => {
+            this.setState({master: user})
+        })
+
+        socket.on("rollDice", (data) => {
+            if(this.state.role === "Meister"){
+                this.onReceiveMessage(data)
+            }else if(this.state.loggedIn === data.emitter){
+                if(!this.state.listMembers.includes(this.state.master)){
+                    let members = this.state.listMembers
+                    members.push(this.state.master)
+                    this.setState({listMembers: members})
+                }
+                this.setTabActive(this.state.master)
+            }
+        })
     }
 
     onReceiveMessage = (data) => {
@@ -74,7 +92,13 @@ class App extends Component {
             members.push(data.emitter)
             this.setState({listMembers: members})
         }
-        console.log("receiveMessage: ", document.getElementById("chatTab-tab-" + this.state.listMembers.indexOf(data.emitter)))
+        // console.log("receiveMessage: ", document.getElementById("chatTab-tab-" + this.state.listMembers.indexOf(data.emitter)))
+        if(this.state.role !== "Meister")
+            this.setTabActive(data.emitter)
+    }
+
+    setTabActive(target){
+        document.getElementById("chatTab-tab-" + this.state.listMembers.indexOf(target)).setAttribute("active", "true")
     }
 
     // getPasswords = () => {
@@ -213,11 +237,11 @@ class App extends Component {
                             </ListGroup>
                         </Col>
                         <Col md={6}>
-                            <DiceTable/>
+                            <DiceTable socket={socket} username={this.state.loggedIn} />
                         </Col>
                     </Row>
                     <Row>
-                        <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} socket={socket} />
+                        <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} role={this.state.role} socket={socket} />
                     </Row>
                 </Grid>
             </div>

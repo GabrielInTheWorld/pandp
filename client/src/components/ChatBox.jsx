@@ -11,7 +11,8 @@ export default class ChatBox extends React.Component{
     state = {
         isShown: false,
         amountMembers: 0,
-        listMembers: []
+        listMembers: [],
+        role: ""
     }
 
     componentDidMount(){
@@ -20,7 +21,7 @@ export default class ChatBox extends React.Component{
 
     componentWillReceiveProps(nextProps){
         // console.log("nextProps: ", nextProps)
-        this.setState({amountMembers: nextProps.members, listMembers: nextProps.listMembers})
+        this.setState({amountMembers: nextProps.members, listMembers: nextProps.listMembers, role: nextProps.role})
     }
 
     getTabs = () => {
@@ -35,7 +36,7 @@ export default class ChatBox extends React.Component{
             )
             var elem = (
                 <Tab ref={"tab_" + i} className="tab" key={i} eventKey={i} title={title}>
-                    <Chat socket={this.props.socket} receiver={this.state.listMembers[i]} username={this.props.username} />
+                    <Chat socket={this.props.socket} role={this.state.role} receiver={this.state.listMembers[i]} username={this.props.username} />
                 </Tab>
             )
 

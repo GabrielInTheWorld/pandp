@@ -60,8 +60,13 @@ io.on("connection", (socket) => {
         console.log("received role: ", data)
         socket.emit("Role", data.role)
         if(data.role === "Meister"){
-            socket.broadcast.emit("masterIsChosen")
+            socket.broadcast.emit("masterIsChosen", data.username)
         }
+    })
+
+    socket.on("rollDice", (data) => {
+        socket.broadcast.emit("rollDice", data)
+        socket.emit("rollDice", data)
     })
 
     socket.on("disconnect", () => {

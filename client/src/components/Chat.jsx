@@ -13,7 +13,9 @@ export default class Chat extends Component{
     state = {
         receiver: "",
         username: "",
-        message: []
+        message: [],
+        role: "",
+        // master: ""
     }
 
     // constructor(){
@@ -29,7 +31,7 @@ export default class Chat extends Component{
 
     componentWillReceiveProps(nextProps){
         // socket = nextProps.socket
-        this.setState({receiver: nextProps.receiver, username: nextProps.username})
+        this.setState({receiver: nextProps.receiver, username: nextProps.username, role: nextProps.role})
         // console.log("nextProps in Chat: ", nextProps, this.state)
     }
 
@@ -38,6 +40,19 @@ export default class Chat extends Component{
             console.log("received data: ", data)
             if(this.state.username === data.user)
                 this.onReceiveMessage(data)
+        })
+
+        // socket.on("masterIsChosen", (user) => {
+        //     this.setState({master: user})
+        // })
+
+        socket.on("rollDice", (data) => {
+            console.log("rollDice: ", data)
+            if(this.state.role === "Meister"){
+                this.onReceiveMessage(data)
+            }else if(this.state.username === data.emitter){
+                this.onRollDiceMessage(data.message)
+            }
         })
     }
 
@@ -73,6 +88,15 @@ export default class Chat extends Component{
 
         socket.emit("message", data)
         document.getElementById("chatMessageInput").value = ""
+    }
+
+    onRollDiceMessage = (message) => {
+        let elem = (
+            <ListGroupItem key={"message_" + counter++} className="sentMessage">{message}</ListGroupItem>
+        )
+        let messageList = this.state.message
+        messageList.push(elem)
+        this.setState({message: messageList})
     }
 
     render(){

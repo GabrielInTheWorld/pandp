@@ -12,12 +12,14 @@ const Row = bootstrap.Row
 const Col = bootstrap.Col
 const Grid = bootstrap.Grid
 
+var socket
 export default class DiceTable extends Component{
     state = {
         amountOfDice: 2,
         kindOfDice: 10,
         diceValue: [-99, -99],
-        sum: -198
+        sum: -198,
+        username: ""
     }
 
     componentDidMount(){
@@ -29,7 +31,13 @@ export default class DiceTable extends Component{
         this.setState({
             diceValue: tmp
         })
+
+        socket = this.props.socket
         // console.log("hello: ", tmp, this.state.diceValue)
+    }
+
+    componentWillReceiveProps(nextProps){
+        this.setState({username: nextProps.username})
     }
 
     getSum(array){
@@ -53,6 +61,10 @@ export default class DiceTable extends Component{
             this.refs["dice_" + i].innerText = sum[i]
         }
         this.setState({diceValue: sum, sum: this.getSum(sum)})
+        socket.emit("rollDice", {
+            emitter: this.state.username,
+            message: this.state.username + " erzielte mit [" + this.state.amountOfDice + "  W" + this.state.kindOfDice + "]: " + this.getSum(sum)
+        })
         // console.log("roll: ", this.getSum(sum))
     }
 
@@ -94,12 +106,12 @@ export default class DiceTable extends Component{
                         <FormGroup>
                             <ControlLabel className="alignLeft">Art des Würfels:</ControlLabel>
                             <FormControl defaultValue="d10" componentClass="select" placeholder="Würfel" onChange={(e) => this.changeKindDice(e)}>
-                                <option value="d4">d4</option>
-                                <option value="d6">d6</option>
-                                <option value="d8">d8</option>
-                                <option value="d10">d10</option>
-                                <option value="d12">d12</option>
-                                <option value="d20">d20</option>
+                                <option value="W4">W4</option>
+                                <option value="W6">W6</option>
+                                <option value="W8">W8</option>
+                                <option value="W10">W10</option>
+                                <option value="W12">W12</option>
+                                <option value="W20">W20</option>
                             </FormControl>
                         </FormGroup>
                     </Col>
