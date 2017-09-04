@@ -1,0 +1,94 @@
+#chat{
+    border: 1px solid #CCC;
+    height: 150px;
+    overflow-y: auto;
+}
+
+textarea{
+    resize: none;
+}
+
+#chatComponent{
+    opacity: 0.6;
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    z-index: 1000;
+    display: inline-block;
+    width: 74vh;
+    /*display: grid;*/
+}
+
+#chatComponent:hover{
+    opacity: 1;
+}
+
+#chatComponent[active="true"] {
+    opacity: 1;
+}
+
+#chatSendButton{
+    float: right;
+}
+
+#chatInput{
+    float: left;
+    width: 35vh;
+}
+
+#messageBlock{
+    float: left;
+    border-right: 1px solid #CCCCCC;
+    width: 35vh;
+    height: 26vh;
+    padding-right: 5px;
+    margin-right: 10px;
+    overflow: auto;
+}
+
+.tab{
+    /*background-color: #CCCCCC;*/
+}
+
+.nav-tabs > li{
+    background-color: #CCCCCC;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.tabCloseButton{
+    background-color: transparent;
+    -webkit-background-size:cover;
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-position: center center;
+    background-image: url("../res/close.png");
+    border: none;
+    height: 16px;
+    margin-left: 4px;
+}
+
+.tabCloseButton:hover, .tabCloseButton:active, .tabCloseButton:focus{
+    background-image: url("../res/close_hover.png");
+    -webkit-background-size:cover;
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-position: center center;
+    background-color: transparent;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.receivedMessage{
+    background-color: #CCFF66;
+    text-align: left;
+}
+
+.sentMessage{
+    background-color: #99CCFF;
+    text-align: right;
+}

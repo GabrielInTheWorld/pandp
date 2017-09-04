@@ -20,16 +20,6 @@ export default class DiceTable extends Component{
         sum: -198
     }
 
-    constructor(){
-        super()
-        // let tmp = []
-        // for(var i = 0; i < this.state.amountOfDice; ++i){
-        //     // this.setState({diceValue[i] = -99})
-        //     tmp.push(-99)
-        // }
-        // this.setState({diceValue: tmp})
-    }
-
     componentDidMount(){
         let tmp = []
         for(var i = 0; i < this.state.amountOfDice; ++i){
@@ -55,7 +45,7 @@ export default class DiceTable extends Component{
         let sum = []
         for(var i = 0; i < this.state.amountOfDice; ++i) {
             // console.log("dice: ", this.refs["dice_" + i])
-            if (this.state.kindOfDice != 10) {
+            if (this.state.kindOfDice !== 10) {
                 sum[i] = Math.floor((Math.random() * this.state.kindOfDice) + 1)
             } else {
                 sum[i] = Math.floor(Math.random() * this.state.kindOfDice)
@@ -91,7 +81,7 @@ export default class DiceTable extends Component{
         var dice = []
         // console.log("getDice: ", this.state.diceValue)
         for(var i = 0; i < number; ++i){
-            dice.push(<Dice id={"dice_" + i} ref={"dice_" + i} value={this.state.diceValue[i]} />)
+            dice.push(<Dice id={"dice_" + i} ref={"dice_" + i} key={"dice_" + i} value={this.state.diceValue[i]} />)
         }
         return dice
     }

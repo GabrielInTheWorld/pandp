@@ -7,6 +7,7 @@ import './App.css';
 
 import Dialog from './components/Dialog'
 import DiceTable from './components/DiceTable'
+import ChatBox from './components/ChatBox'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
 // self = null
 const socket = io()
@@ -18,7 +19,9 @@ class App extends Component {
         username: "",
         loggedIn: "",
         showModal: true,
-        listItems: []
+        listItems: [],
+        amountOfMembers: 0,
+        listMembers: []
     }
 
     componentDidMount(){
@@ -43,10 +46,27 @@ class App extends Component {
         })
 
         socket.on("allUsers", (allUsers) => {
+            this.setState({listItems: []})
             for(var i = 0; i < allUsers.length; ++i){
-                this.getListItem(allUsers[i])
+                if(allUsers[i] !== this.state.loggedIn)
+                    this.getListItem(allUsers[i])
             }
         })
+
+        socket.on("message", (data) => {
+            // console.log("received data: ", data)
+            if(this.state.loggedIn === data.user)
+                this.onReceiveMessage(data)
+        })
+    }
+
+    onReceiveMessage = (data) => {
+        if(!this.state.listMembers.includes(data.emitter)){
+            let members = this.state.listMembers
+            members.push(data.emitter)
+            this.setState({listMembers: members})
+        }
+        console.log("receiveMessage: ", document.getElementById("chatTab-tab-" + this.state.listMembers.indexOf(data.emitter)))
     }
 
     // getPasswords = () => {
@@ -94,7 +114,15 @@ class App extends Component {
      * end of handling
      */
     onClickUser(e){
-        console.log("You've clicked on ...", e)
+        console.log("You've clicked on ...", e, this.state.listMembers)
+        // this.setState(prevState => {
+        //     listMembers: [prevState.listMembers, e]
+        // })
+        if(!this.state.listMembers.includes(e)) {
+            let members = this.state.listMembers
+            members.push(e)
+            this.setState({listMembers: members})
+        }
         this.onOpenChatbox()
     }
 
@@ -113,7 +141,7 @@ class App extends Component {
             </ListGroupItem>
         )
         array.push(element)
-        this.setState({listItems: array})
+        this.setState({listItems: array, amountOfMembers: array.length})
     }
 
     /**
@@ -149,7 +177,7 @@ class App extends Component {
 
                 <Dialog showModal={this.state.showModal} title="Bitte gib deinen Nutzernamen ein:" body={body} footer={footer}/>
 
-                <h1>Cooles Pen and Paper Dashboard</h1>
+                <h1>Krasses Pen and Paper Dashboard</h1>
                 <p id="servertime"
                     ref="serverTime">Servertime: </p>
 
@@ -171,6 +199,9 @@ class App extends Component {
                         <Col md={6}>
                             <DiceTable/>
                         </Col>
+                    </Row>
+                    <Row>
+                        <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} socket={socket} />
                     </Row>
                 </Grid>
             </div>

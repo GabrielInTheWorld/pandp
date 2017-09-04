@@ -49,6 +49,11 @@ io.on("connection", (socket) => {
         allUsers.push(user)
         socket.broadcast.emit("username", user)
     })
+
+    socket.on("message", (data) => {
+        // console.log("data: ", data)
+        socket.broadcast.emit("message", data)
+    })
     socket.on("disconnect", () => {
         // socket.broadcast.emit("disconnected")
         console.log("Client disconnected.")
