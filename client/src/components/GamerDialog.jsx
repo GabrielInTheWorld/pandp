@@ -7,19 +7,31 @@ const Tooltip = bootstrap.Tooltip
 const OverlayTrigger = bootstrap.OverlayTrigger
 
 var socket
+// var bms
 export default class GamerDialog extends Component{
     state = {
         showModal: false,
-        username: ""
+        username: "",
+        disabled: false
     }
 
     componentDidMount(){
         socket = this.props.socket
+        this.handleReceiveMessage()
         this.setState({showModal: this.props.show})
     }
 
     componentWillReceiveProps(nextProps){
         this.setState({showModal: nextProps.show, username: nextProps.username})
+    }
+
+    handleReceiveMessage(){
+        socket.on("masterIsChosen", () => {
+            // this.buttonToSayMaster.disabled = true
+            // document.getElementById("buttonToSayMaster").disabled = true
+            // bms.disabled = true
+            this.setState({disabled: true})
+        })
     }
 
     setRole = (role) => {
@@ -63,12 +75,12 @@ export default class GamerDialog extends Component{
                 <Modal.Body>
                     <div style={style}>
                         <OverlayTrigger placement="top" overlay={tooltipPlayer}>
-                            <Button bsStyle="primary" onClick={() => this.setRole("Spieler")}>Spieler</Button>
+                            <Button bsStyle="primary" bsSize="large" onClick={() => this.setRole("Spieler")}>Spieler</Button>
                         </OverlayTrigger>
                     </div>
                     <div style={style}>
                         <OverlayTrigger placement="top" overlay={tooltipMaster}>
-                            <Button bsStyle="danger" onClick={() => this.setRole("Meister")}>Meister</Button>
+                            <Button id="buttonToSayMaster" disabled={this.state.disabled} bsStyle="danger" bsSize="large" onClick={() => this.setRole("Meister")}>Meister</Button>
                         </OverlayTrigger>
                     </div>
                 </Modal.Body>
