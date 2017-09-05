@@ -25,6 +25,21 @@ app.get("/api/passwords", (req, res) => {
     console.log("Sent ${count} passwords")
 })
 
+app.post("/api/upload", (req, res, next) => {
+    // var form = new formidable.IncomingForm()
+    //
+    // form.keepExtensions = true
+    // form.parse(req, (err, fields, files) => {
+    //     var tempFilePath = files.file['path']
+    //     var userFileName = files.file['name']
+    //     var contentType = files.file['type']
+    //
+    //     fs.readFile("./files", function(err, file_buffer){
+    //         console.log("file_buffer: ", file_buffer)
+    //     })
+    // })
+})
+
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join (__dirname + "/client/build/index.html"))
 // })
@@ -32,20 +47,7 @@ app.get("/api/passwords", (req, res) => {
 const index = path.join(__dirname + "/client/build/index.html")
 const port = process.env.PORT || 3001
 app.use((req, res) => res.sendFile(index))
-app.post("/upload", (req, res, next) => {
-    var form = new formidable.IncomingForm()
 
-    form.keepExtensions = true
-    form.parse(req, (err, fields, files) => {
-        var tempFilePath = files.file['path']
-        var userFileName = files.file['name']
-        var contentType = files.file['type']
-
-        fs.readFile("./files", function(err, file_buffer){
-            console.log("file_buffer: ", file_buffer)
-        })
-    })
-})
 // app.listen(port)
 // const server = http.createServer(app)
 const server = app.listen(port)

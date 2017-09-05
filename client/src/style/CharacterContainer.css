@@ -17,23 +17,38 @@
 }
 
 #fileUploader{
-    text-align: center;
-    /*width: 55px;*/
-    border: 1px solid #FFF;
-    padding-left: 12px;
-    padding-right: 12px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    /*padding: 0px;*/
-    font-size: 30px;
-    font-weight: 700;
-    color: white;
-    display: inline-block;
-    background-color: #33CC33;
+    /*text-align: center;*/
+    /*!*width: 55px;*!*/
+    /*border: 1px solid #FFF;*/
+    /*padding-left: 12px;*/
+    /*padding-right: 12px;*/
+    /*-webkit-border-radius: 8px;*/
+    /*-moz-border-radius: 8px;*/
+    /*border-radius: 8px;*/
+    /*!*padding: 0px;*!*/
+    /*font-size: 30px;*/
+    /*font-weight: 700;*/
+    /*color: white;*/
+    /*display: inline-block;*/
+    /*background-color: #33CC33;*/
+    width: 51px;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    color: #FFF;
 }
 
 #fileUploader:hover{
-    background-color: #093;
-    cursor: pointer;
+    background-color: #449d44;
+    border-color: #398439;
+    /*cursor: pointer;*/
+}
+
+.verticalCentered{
+    position: absolute;
+    top: 26%;
+    margin-left: 5px;
+}
+
+.verticalCentered > button{
+    margin-top:3px;
 }

@@ -10,6 +10,7 @@ import GamerDialog from './components/GamerDialog'
 import CharacterContainer from './components/CharacterContainer'
 import DiceTable from './components/DiceTable'
 import ChatBox from './components/ChatBox'
+import OptionalComponents from './components/OptionalComponents'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
 // self = null
 const socket = io()
@@ -236,6 +237,9 @@ class App extends Component {
                         </Col>
                         <Col md={6}>
                             <DiceTable socket={socket} username={this.state.loggedIn} />
+                        </Col>
+                        <Col md={1}>
+                            <OptionalComponents/>
                         </Col>
                     </Row>
                     <Row>
