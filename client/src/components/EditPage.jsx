@@ -4,7 +4,7 @@ import {Modal, Button} from 'react-bootstrap'
 
 import '../style/Components.css'
 
-var canvas
+var isPressing = false
 export default class EditPage extends Component{
     state = {
         show: false
@@ -21,15 +21,16 @@ export default class EditPage extends Component{
     /**
      *
      * @param event contains the mousedata
-     * TODO: set a variable which tells if the mouse is pressed. If this is true, the user will draw something on the canvas by mousemove
      */
-    onDraw(event){
-        var canvas = document.getElementById("canvas")
-        var rect = canvas.getBoundingClientRect()
-        console.log("canvas: ", event.clientY, event.clientY - rect.top, document.getElementById("canvas"))
-        var context = canvas.getContext("2d")
-        context.fillRect(event.clientX-rect.left, event.clientY-rect.top, 4, 4)
-        // context.fill
+    onDraw(event) {
+        if (isPressing) {
+            var canvas = document.getElementById("canvas")
+            var rect = canvas.getBoundingClientRect()
+            // console.log("canvas: ", event.clientY, event.clientY - rect.top, document.getElementById("canvas"))
+            var context = canvas.getContext("2d")
+            context.fillRect(event.clientX - rect.left, event.clientY - rect.top, 4, 4)
+            // context.fill
+        }
     }
 
     render(){
@@ -44,9 +45,16 @@ export default class EditPage extends Component{
                         className="drawing"
                         width={568}
                         height={500}
-                        ref={(can) => {canvas = can}}
-                        onClick={(event) => this.onDraw(event)}
-                        onMouseMove={(event) => this.onDraw(event)}></canvas>
+                        onMouseDown={(event) => {
+                            isPressing = true
+                            this.onDraw(event)
+                        }}
+                        onMouseMove={(event) => this.onDraw(event)}
+                        onMouseUp={() => {
+                            console.log("onMouseUp")
+                            isPressing = false
+                        }}
+                    ></canvas>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle="success">Senden</Button>
