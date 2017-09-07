@@ -27,12 +27,14 @@ class App extends Component {
         showGamerDialog: false,
         listItems: [],
         amountOfMembers: 0,
-        listMembers: []
+        listMembers: [], //list only with members in chat
+        memberList: [] //list with all members in room
     }
 
     componentDidMount(){
         this.handleOnReceiveMessage()
-        console.log("socket: ", socket)
+        // console.log("socket: ", socket)
+        console.log("App.js: ")
 
         let elem = this.refs.serverTime
         // var socket = io()
@@ -173,6 +175,9 @@ class App extends Component {
 
     getListItem(username){
         let user = username
+        let memberList = this.state.memberList
+        memberList.push(username)
+
         let array = this.state.listItems
         const element = (
             <ListGroupItem
@@ -182,7 +187,7 @@ class App extends Component {
             </ListGroupItem>
         )
         array.push(element)
-        this.setState({listItems: array, amountOfMembers: array.length})
+        this.setState({listItems: array, memberList: memberList, amountOfMembers: array.length})
     }
 
     /**
@@ -239,7 +244,7 @@ class App extends Component {
                             <DiceTable socket={socket} username={this.state.loggedIn} />
                         </Col>
                         <Col md={1}>
-                            <OptionalComponents/>
+                            <OptionalComponents socket={socket} memberList={this.state.memberList} />
                         </Col>
                     </Row>
                     <Row>
