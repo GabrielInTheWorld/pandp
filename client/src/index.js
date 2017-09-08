@@ -4,5 +4,23 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import io from 'socket.io-client'
+import { Provider } from 'react-redux'
+
+import configureStore from './components/store/configureStore'
+// import {createSocket} from './components/actions'
+
+const store = configureStore({
+    socket: io(),
+    members: []
+})
+
+// const socket = io()/*
+// createSocket(socket)*/
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>
+    , document.getElementById('root'));
 registerServiceWorker();

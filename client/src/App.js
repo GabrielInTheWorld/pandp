@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
-import io from 'socket.io-client'
-import {Button, FormControl, FormGroup, ListGroup, ListGroupItem, Grid, Col, Row, Panel} from 'react-bootstrap'
+// import io from 'socket.io-client'
+import {Button, FormControl, FormGroup, ListGroup, ListGroupItem, Grid, Col, Row, Panel, HelpBlock} from 'react-bootstrap'
+import {connect} from 'react-redux'
 
 import './App.css';
 
@@ -11,10 +12,12 @@ import CharacterContainer from './components/CharacterContainer'
 import DiceTable from './components/DiceTable'
 import ChatBox from './components/ChatBox'
 import OptionalComponents from './components/OptionalComponents'
+
+import {addUser, createSocket} from './components/actions'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
 // self = null
-const socket = io()
-
+// const socket = io()
+var socket = null
 class App extends Component {
     state = {
         passwords: [],
@@ -31,23 +34,46 @@ class App extends Component {
         memberList: [] //list with all members in room
     }
 
-    componentDidMount(){
-        this.handleOnReceiveMessage()
-        // console.log("socket: ", socket)
-        console.log("App.js: ")
+    constructor(props){
+        super(props)
+        // const socket = io()
+        // console.log("socket in componentWillMount: ", socket)
+        // this.props.createSocket(socket)
+        // console.log("constructor with socket: ", socket, this.props, props)
+        socket = this.props.socket
+}
 
+    // componentWillMount(){
+    //     // const socket = io()
+    //     console.log("socket in componentWillMount: ", this.props)
+    //     // this.props.createSocket(socket)
+    // }
+
+    componentDidMount(){
+        // const socket = io()
+        // socket = this.props.socket
+        // this.props.createSocket(socket)
+        // console.log("socket: ", socket)
+
+        // console.log("App.js: ", this.props, socket)
+        this.handleOnReceiveMessage()
         let elem = this.refs.serverTime
-        // var socket = io()
         socket.on("time", function(timeString){
             elem.innerText = "Servertime: " + timeString
             // console.log("logged in to server at: ", timeString)
         })
     }
 
+    componentWillReceiveProps(nextProps){
+        // console.log("App.js - componentWillReceiveProps: ", nextProps, this.props)
+        this.setState({memberList: nextProps.members})
+    }
+
     /**
      * handle socket messages
      */
-    handleOnReceiveMessage(){
+    handleOnReceiveMessage = () => {
+        // console.log("handleOnReceiveMessage", this.props.socket)
         socket.on("username", (user) => {
             console.log("received User: ", user)
             this.getListItem(user)
@@ -126,13 +152,30 @@ class App extends Component {
 
     getValidationState(){
         const length = this.state.username.length
-        if(length >= 8) return "success"
-        else if(length >= 4) return "warning"
-        else if(length >= 0) return "error"
+        // let helper = this.refs.helpValidation
+        let helper = document.getElementById("helpValidation")
+        // console.log("getValidationState: ", helper)
+        if(this.state.memberList.includes(this.state.username) && helper != undefined){
+            // console.log("Helper: ", helper.props["HelpBlock"])
+            helper.innerText = "Der Nutzername existiert bereits. Bitte gib einen anderen ein."
+            return "error"
+        }
+        if(length >= 8  && helper != undefined){
+            helper.innerText = "Der Nutzername ist krass!"
+            return "success"
+        }
+        else if(length >= 4 && helper != undefined){
+            helper.innerText = "Länger wäre besser..."
+            return "warning"
+        }
+        else if(length >= 0 && helper != undefined){
+            helper.innerText = "Deutlich zu kurz..."
+            return "error"
+        }
     }
 
     confirmUsername(){
-        if(this.state.username && this.state.username.length >= 4){
+        if(this.state.username && this.state.username.length >= 4 && !this.state.memberList.includes(this.state.username)){
             // console.log("Username: ", this.state.username)
             socket.emit("username", this.state.username)
             this.setState({loggedIn: this.state.username})
@@ -157,7 +200,7 @@ class App extends Component {
      * end of handling
      */
     onClickUser(e){
-        console.log("You've clicked on ...", e, this.state.listMembers)
+        // console.log("You've clicked on ...", e, this.state.listMembers)
         // this.setState(prevState => {
         //     listMembers: [prevState.listMembers, e]
         // })
@@ -174,9 +217,11 @@ class App extends Component {
     }
 
     getListItem(username){
+        // TODO: add new member to store instead of local state
         let user = username
-        let memberList = this.state.memberList
-        memberList.push(username)
+        // let memberList = this.state.memberList
+        // memberList.push(username)
+        this.props.addUser(user)
 
         let array = this.state.listItems
         const element = (
@@ -187,7 +232,9 @@ class App extends Component {
             </ListGroupItem>
         )
         array.push(element)
-        this.setState({listItems: array, memberList: memberList, amountOfMembers: array.length})
+        // this.setState({listItems: array, memberList: memberList, amountOfMembers: array.length})
+        this.setState({listItems: array, amountOfMembers: array.length})
+        console.log("App.js - getListItem: ", this.props.members)
     }
 
     /**
@@ -195,6 +242,7 @@ class App extends Component {
      * @returns {XML}
      */
     render() {
+        // console.log("rendering method: ", this.props)
         const body = (
             <form>
                 <FormGroup
@@ -205,6 +253,7 @@ class App extends Component {
                         placeholder="Dein Nutzername:"
                         onChange={(e) => this.onChangeUsername(e.target.value)} />
                     <FormControl.Feedback />
+                    <HelpBlock id="helpValidation" ref="helpValidation"></HelpBlock>
                 </FormGroup>
             </form>
         )
@@ -222,7 +271,7 @@ class App extends Component {
             <div className="App">
 
                 <Dialog showModal={this.state.showModal} title="Bitte gib deinen Nutzernamen ein:" body={body} footer={footer}/>
-                <GamerDialog show={this.state.showGamerDialog} username={this.state.loggedIn} socket={socket} />
+                <GamerDialog show={this.state.showGamerDialog} username={this.state.loggedIn} />
 
                 <h1>Krasses Pen and Paper Dashboard</h1>
                 <p id="servertime"
@@ -241,10 +290,10 @@ class App extends Component {
                             </Panel>
                         </Col>
                         <Col md={6}>
-                            <DiceTable socket={socket} username={this.state.loggedIn} />
+                            <DiceTable username={this.state.loggedIn} />
                         </Col>
                         <Col md={1}>
-                            <OptionalComponents socket={socket} memberList={this.state.memberList} />
+                            <OptionalComponents />
                         </Col>
                     </Row>
                     <Row>
@@ -255,7 +304,7 @@ class App extends Component {
                             </ListGroup>
                         </Col>
                         <Col md={6}>
-                            <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} role={this.state.role} socket={socket} />
+                            <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} role={this.state.role} />
                         </Col>
                     </Row>
                     <Row>
@@ -267,4 +316,20 @@ class App extends Component {
       }
 }
 
-export default App;
+const mapStateToProps = (state, ownProps) => {
+    // console.log("mapstatetoprops: ", state, ownProps)
+    return {
+        socket: state.socket,
+        members: state.members
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    // console.log("mapdispatchtoprops", dispatch)
+    return{
+        createSocket: socket => dispatch(createSocket(socket)),
+        addUser: user => dispatch(addUser(user))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

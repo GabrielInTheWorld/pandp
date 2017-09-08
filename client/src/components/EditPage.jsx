@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 
 import {Modal, Button, Checkbox} from 'react-bootstrap'
 
@@ -6,7 +7,7 @@ import '../style/Components.css'
 
 var isPressing = false
 var socket
-export default class EditPage extends Component{
+class EditPage extends Component{
     state = {
         show: false,
         showSendDialog: false,
@@ -16,12 +17,12 @@ export default class EditPage extends Component{
 
     componentDidMount(){
         socket = this.props.socket
-        console.log("socket: ", socket)
+        // console.log("socket: ", socket)
     }
 
     componentWillReceiveProps(nextProps){
         console.log("EditPage: ", nextProps)
-        this.setState({show: nextProps.show, memberList: nextProps.memberList})
+        this.setState({show: nextProps.show, memberList: nextProps.members})
     }
 
     /**
@@ -46,7 +47,7 @@ export default class EditPage extends Component{
                 <Checkbox key={"checkbox_" + i}
                           inputRef={
                               (ref) => {
-                                  console.log("this.inputRef: ", ref)
+                                  // console.log("this.inputRef: ", ref)
                               }
                           }
                           onChange={() => {
@@ -104,7 +105,7 @@ export default class EditPage extends Component{
                             }}
                             onMouseMove={(event) => this.onDraw(event)}
                             onMouseUp={() => {
-                                console.log("onMouseUp")
+                                // console.log("onMouseUp")
                                 isPressing = false
                             }}
                         ></canvas>
@@ -122,3 +123,12 @@ export default class EditPage extends Component{
         )
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return{
+        socket: state.socket,
+        members: state.members
+    }
+}
+
+export default connect(mapStateToProps)(EditPage)

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import * as bootstrap from 'react-bootstrap'
+import {connect} from 'react-redux'
 
 const Modal = bootstrap.Modal
 const Button = bootstrap.Button
@@ -7,8 +8,7 @@ const Tooltip = bootstrap.Tooltip
 const OverlayTrigger = bootstrap.OverlayTrigger
 
 var socket
-// var bms
-export default class GamerDialog extends Component{
+class GamerDialog extends Component{
     state = {
         showModal: false,
         username: "",
@@ -27,9 +27,6 @@ export default class GamerDialog extends Component{
 
     handleReceiveMessage(){
         socket.on("masterIsChosen", () => {
-            // this.buttonToSayMaster.disabled = true
-            // document.getElementById("buttonToSayMaster").disabled = true
-            // bms.disabled = true
             this.setState({disabled: true})
         })
     }
@@ -88,3 +85,12 @@ export default class GamerDialog extends Component{
         )
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return{
+        socket: state.socket,
+        members: state.members
+    }
+}
+
+export default connect(mapStateToProps)(GamerDialog)

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import * as bootstrap from 'react-bootstrap'
+import {connect} from 'react-redux'
 
 import Dice from './Dice'
 
@@ -13,7 +14,7 @@ const Col = bootstrap.Col
 const Grid = bootstrap.Grid
 
 var socket
-export default class DiceTable extends Component{
+class DiceTable extends Component{
     state = {
         amountOfDice: 2,
         kindOfDice: 10,
@@ -23,6 +24,7 @@ export default class DiceTable extends Component{
     }
 
     componentDidMount(){
+        console.log("DiceTable: ", this.props)
         let tmp = []
         for(var i = 0; i < this.state.amountOfDice; ++i){
             // this.setState({diceValue[i] = -99})
@@ -137,3 +139,12 @@ export default class DiceTable extends Component{
         )
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        socket: state.socket,
+        members: state.members
+    }
+}
+
+export default connect(mapStateToProps)(DiceTable)

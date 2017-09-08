@@ -14,7 +14,7 @@ export default class CreatePicture extends React.Component{
     }
 
     onOpenCanvas = () => {
-        console.log("You've clicked to draw on canvas.")
+        // console.log("You've clicked to draw on canvas.")
         this.setState({show: true})
     }
 
@@ -56,11 +56,12 @@ export default class CreatePicture extends React.Component{
             width: "38px",
             height: "38px"
         }
-        console.log("render-method")
+        // console.log("render-method")
         return(
             <div>
                 {this.getChooseModal()}
-                <EditPage show={this.state.showCanvas} socket={this.props.socket} memberList={this.props.memberList} />
+                {/*TODO: instead of memberList passing through props connect it in the component */}
+                <EditPage show={this.state.showCanvas} />
                <div style={style}>{this.getButtonContent()}</div>
             </div>
         )

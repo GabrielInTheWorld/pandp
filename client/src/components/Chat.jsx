@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 
 import {FormGroup, ListGroup, FormControl, ControlLabel, Button, ListGroupItem} from 'react-bootstrap'
 
@@ -8,7 +9,7 @@ import '../style/Chat.css'
 var socket
 var counter = 0
 
-export default class Chat extends Component{
+class Chat extends Component{
 
     state = {
         receiver: "",
@@ -130,3 +131,12 @@ export default class Chat extends Component{
         )
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return{
+        socket: state.socket,
+        members: state.members
+    }
+}
+
+export default connect (mapStateToProps)(Chat)

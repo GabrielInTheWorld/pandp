@@ -36,7 +36,7 @@ export default class ChatBox extends React.Component{
             )
             var elem = (
                 <Tab ref={"tab_" + i} className="tab" key={i} eventKey={i} title={title}>
-                    <Chat socket={this.props.socket} role={this.state.role} receiver={this.state.listMembers[i]} username={this.props.username} />
+                    <Chat role={this.state.role} receiver={this.state.listMembers[i]} username={this.props.username} />
                 </Tab>
             )
 
