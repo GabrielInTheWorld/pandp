@@ -14,3 +14,11 @@ export const createSocket = (socket) => {
         newSocket: socket
     }
 }
+
+export const receiveMessage = (message, receiver) => {
+    return{
+        type: 'receive_message',
+        message: message,
+        receiver: receiver
+    }
+}
