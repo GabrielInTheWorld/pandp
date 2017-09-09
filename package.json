@@ -1,13 +1,25 @@
 {
   "name": "pandp",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./index",
-    "production": "node ./index",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielInTheWorld/pandp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielInTheWorld/pandp/issues"
+  },
+  "homepage": "https://github.com/GabrielInTheWorld/pandp#readme",
   "dependencies": {
     "body-parser": "~1.17.1",
     "bufferutil": "3.0.2",
