@@ -19,27 +19,30 @@ class Chat extends Component{
         // master: ""
     }
 
-    // constructor(){
-    //     super()
-    // }
+    constructor(props){
+        super(props)
+        console.log("constructor in Chat: ", this.props)
+        // this.setState({receiver: this.props.receiver, username: this.props.username, role: this.props.role})
+    }
 
     componentDidMount(){
         socket = this.props.socket
-        this.handleReceiveMessage()
         // this.setState({receiver: this.props.receiver})
-        // console.log("socket in Chat: ", this.state)
+        console.log("socket in Chat: ", this.state, this.props)
+        this.setState({receiver: this.props.receiver, username: this.props.username, role: this.props.role})
+        this.handleReceiveMessage()
     }
 
-    componentWillReceiveProps(nextProps){
-        // socket = nextProps.socket
-        this.setState({receiver: nextProps.receiver, username: nextProps.username, role: nextProps.role})
-        // console.log("nextProps in Chat: ", nextProps, this.state)
-    }
+    // componentWillReceiveProps(nextProps){
+    //     // socket = nextProps.socket
+    //     this.setState({receiver: nextProps.receiver, username: nextProps.username, role: nextProps.role})
+    //     console.log("nextProps in Chat: ", nextProps, this.state)
+    // }
 
     handleReceiveMessage = () => {
         socket.on("message", (data) => {
-            console.log("received data: ", data)
-            if(this.state.username === data.user)
+            console.log("received data: ", this.state, data)
+            if(this.state.username === data.user || this.props.username === data.user)
                 this.onReceiveMessage(data)
         })
 
@@ -63,7 +66,7 @@ class Chat extends Component{
         //     members.push(data.emitter)
         //     this.setState({listMembers: members})
         // }
-        console.log("receiveMessage: ", data)
+        console.log("receivedMessage: ", data)
         let elem = (
             <ListGroupItem key={"message_" + counter++} className="receivedMessage">{data.message}</ListGroupItem>
         )
@@ -73,6 +76,7 @@ class Chat extends Component{
     }
 
     sendMessage = () => {
+        console.log("chatMessageInput: ", document.getElementById("chatMessageInput"))
         let data = {
             user: this.state.receiver,
             message: document.getElementById("chatMessageInput").value,

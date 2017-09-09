@@ -3,6 +3,8 @@ import * as bootstrap from 'react-bootstrap'
 
 import Chat from './Chat'
 
+import '../style/Chat.css'
+
 const Tabs = bootstrap.Tabs
 const Tab = bootstrap.Tab
 const Button = bootstrap.Button
@@ -10,9 +12,9 @@ const Button = bootstrap.Button
 export default class ChatBox extends React.Component{
     state = {
         isShown: false,
-        amountMembers: 0,
         listMembers: [],
-        role: ""
+        role: "",
+        username: ""
     }
 
     componentDidMount(){
@@ -20,14 +22,15 @@ export default class ChatBox extends React.Component{
     }
 
     componentWillReceiveProps(nextProps){
-        // console.log("nextProps: ", nextProps)
-        this.setState({amountMembers: nextProps.members, listMembers: nextProps.listMembers, role: nextProps.role})
+        console.log("nextProps in ChatBox: ", nextProps)
+        this.setState({listMembers: nextProps.listMembers, role: nextProps.role, username: nextProps.username})
     }
 
     getTabs = () => {
+        console.log("getTabs in ChatBox: ", this.state)
         let tabs = []
 
-        for(var i = 0; i < this.state.amountMembers; ++i){
+        for(var i = 0; i < this.state.listMembers.length; ++i){
             let title = (
                 <div>
                     <label className="pointer">{this.state.listMembers[i]}</label>
@@ -36,7 +39,7 @@ export default class ChatBox extends React.Component{
             )
             var elem = (
                 <Tab ref={"tab_" + i} className="tab" key={i} eventKey={i} title={title}>
-                    <Chat role={this.state.role} receiver={this.state.listMembers[i]} username={this.props.username} />
+                    <Chat role={this.state.role} receiver={this.state.listMembers[i]} username={this.state.username} />
                 </Tab>
             )
 

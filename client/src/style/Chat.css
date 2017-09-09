@@ -52,6 +52,10 @@ textarea{
     /*background-color: #CCCCCC;*/
 }
 
+#chatTab > ul.nav-tabs{
+    border-bottom: none;
+}
+
 .nav-tabs > li{
     background-color: #CCCCCC;
     border-top-left-radius: 4px;

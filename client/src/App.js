@@ -89,7 +89,7 @@ class App extends Component {
         })
 
         socket.on("message", (data) => {
-            // console.log("received data: ", data)
+            console.log("received data in App.js: ", data)
             if(this.state.loggedIn === data.user)
                 this.onReceiveMessage(data)
         })
@@ -237,6 +237,11 @@ class App extends Component {
         console.log("App.js - getListItem: ", this.props.members)
     }
 
+
+    tabClose(member){
+        console.log("closing tab: ", member.target)
+    }
+
     /**
      * render the page
      * @returns {XML}
@@ -304,7 +309,7 @@ class App extends Component {
                             </ListGroup>
                         </Col>
                         <Col md={6}>
-                            <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} members={this.state.amountOfMembers} role={this.state.role} />
+                            <ChatBox username={this.state.loggedIn} listMembers={this.state.listMembers} role={this.state.role} />
                         </Col>
                     </Row>
                     <Row>
