@@ -116,7 +116,7 @@ setInterval(() =>
     io.emit("time", new Date().toTimeString())
 , 1000)
 
-console.log("Password generator listening on ${port}")
+console.log(`Password generator listening on ${port}`);
 
 // var router = express.Router();
 
