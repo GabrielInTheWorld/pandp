@@ -60,7 +60,6 @@ export default class CreatePicture extends React.Component{
         return(
             <div>
                 {this.getChooseModal()}
-                {/*TODO: instead of memberList passing through props connect it in the component */}
                 <EditPage show={this.state.showCanvas} />
                <div style={style}>{this.getButtonContent()}</div>
             </div>

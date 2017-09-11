@@ -38,7 +38,7 @@ class ReceiveMail extends Component{
     getImages = () => {
         let elems = []
         for(let i = 0; i < this.state.dataSource.length; ++i){
-            elems.push(<ImageContainer source={this.state.dataSource[i]} />)
+            elems.push(<ImageContainer key={"image_" + i} source={this.state.dataSource[i]} />)
         }
         return elems
     }
