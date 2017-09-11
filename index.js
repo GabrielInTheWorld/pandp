@@ -22,7 +22,7 @@ app.get("/api/passwords", (req, res) => {
 
     res.json(passwords)
 
-    console.log("Sent ${count} passwords")
+    console.log(`Sent ${count} passwords`)
 })
 
 app.post("/api/upload", (req, res, next) => {
@@ -38,6 +38,7 @@ app.post("/api/upload", (req, res, next) => {
     //         console.log("file_buffer: ", file_buffer)
     //     })
     // })
+    res.json({value: "Hello World!"})
 })
 
 // app.get('*', (req, res) => {
@@ -87,6 +88,10 @@ io.on("connection", (socket) => {
     socket.on("rollDice", (data) => {
         socket.broadcast.emit("rollDice", data)
         socket.emit("rollDice", data)
+    })
+
+    socket.on("mail", (data) => {
+        socket.broadcast.emit("mail", data)
     })
 
     socket.on("disconnect", () => {
