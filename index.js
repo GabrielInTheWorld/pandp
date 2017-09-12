@@ -4,6 +4,7 @@ const http = require("http")
 const generatePassword = require("password-generator")
 // const SocketServer = require('ws').Server
 const socketIO = require("socket.io")
+const streamIO = require("socket.io-stream")
 const cors = require("cors")
 const formidable = require("formidable")
 const fs = require("fs")
@@ -55,7 +56,7 @@ const server = app.listen(port)
 const io = socketIO(server)
 var allClients = []
 var allUsers = []
-io.on("connection", (socket) => {
+io.of('/').on("connection", (socket) => {
     // allClients.push(socket)
     console.log("Client connected.")
     // socket.emit()
@@ -63,6 +64,10 @@ io.on("connection", (socket) => {
         socket.emit("username", allUsers[i])
     }
 
+    streamIO(socket).on('video', (stream, data) => {
+        var filename = path.basename(data.name)
+        stream.pipe(fs.createWriteStream(filename))
+    })
 
     socket.on("username", (user) => {
         console.log("User: ", user)
@@ -116,7 +121,7 @@ setInterval(() =>
     io.emit("time", new Date().toTimeString())
 , 1000)
 
-console.log("Password generator listening on ${port}")
+console.log('Password generator listening on ${port}')
 
 // var router = express.Router();
 

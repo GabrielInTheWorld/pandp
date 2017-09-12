@@ -12,6 +12,7 @@ import CharacterContainer from './components/CharacterContainer'
 import DiceTable from './components/DiceTable'
 import ChatBox from './components/ChatBox'
 import OptionalComponents from './components/OptionalComponents'
+import Video from './components/Video'
 
 import {addUser, createSocket} from './components/actions'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
@@ -286,6 +287,9 @@ class App extends Component {
                     <Row id="topRow">
                         <Col id="fileComponent" md={9}>
                             <CharacterContainer/>
+                        </Col>
+                        <Col md={3}>
+                            <Video />
                         </Col>
                     </Row>
                     <Row>

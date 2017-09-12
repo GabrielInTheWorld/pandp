@@ -48,3 +48,7 @@
     cursor: crosshair;
     border: 1px solid #CCCCCC;
 }
+
+#camera{
+    border: 1px solid #000000;
+}
