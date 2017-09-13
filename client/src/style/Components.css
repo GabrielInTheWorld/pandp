@@ -49,6 +49,7 @@
     border: 1px solid #CCCCCC;
 }
 
-#camera{
+.cameraStream{
     border: 1px solid #000000;
+    transform: rotateY(180deg);
 }

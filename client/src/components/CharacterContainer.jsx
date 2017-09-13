@@ -48,7 +48,7 @@ export default class CharacterContainer extends Component{
         }
 
         return(
-            <Grid>
+            <Col md={12} style={{paddingRight: 0}}>
                 <Row className="fileContainer">
                     {this.getFileContainer()}
                     <div style={style}>
@@ -61,7 +61,7 @@ export default class CharacterContainer extends Component{
                         </div>
                     </div>
                 </Row>
-            </Grid>
+            </Col>
         )
     }
 }

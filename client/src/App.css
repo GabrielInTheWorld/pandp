@@ -45,7 +45,7 @@ h1, p{
 
 #rowOfDice{
   padding-top: 75px;
-  padding-bottom: 75px;
+  /*padding-bottom: 75px;*/
   margin-bottom:40px;
 }
 
@@ -55,7 +55,7 @@ h1, p{
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   border-radius: 12px;
-  padding:50px;
+  padding:30px;
   display: inline;
   margin: 5px;
   font-weight:700;

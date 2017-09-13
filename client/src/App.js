@@ -13,12 +13,14 @@ import DiceTable from './components/DiceTable'
 import ChatBox from './components/ChatBox'
 import OptionalComponents from './components/OptionalComponents'
 import Video from './components/Video'
+import VideoContainer from './components/VideoContainer'
 
 import {addUser, createSocket} from './components/actions'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
 // self = null
 // const socket = io()
 var socket = null
+var user = ""
 class App extends Component {
     state = {
         passwords: [],
@@ -180,8 +182,10 @@ class App extends Component {
             // console.log("Username: ", this.state.username)
             socket.emit("username", this.state.username)
             this.setState({loggedIn: this.state.username})
+            user = this.state.loggedIn
             this.onClose()
             this.openGamerDialog()
+            this.play()
         }
     }
 
@@ -195,6 +199,34 @@ class App extends Component {
         this.setState({
             showGamerDialog: true
         })
+    }
+
+    play = () => {
+        let constraints = {
+            audio: false,
+            video: {
+                width: {ideal: 300},
+                height: {ideal: 150}
+            }
+        }
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
+                let camera = document.getElementById("ownView")
+                camera.srcObject = mediaStream
+                // camera.srcObject.scale(-1, 1)
+                // console.log("this.refs.video: ", document.getElementById("ownView"))
+                camera.onloadedmetadata = function(e) {
+                    camera.play()
+                }
+                let data = {
+                    username: user,
+                    stream: mediaStream
+                }
+                socket.emit("video", data)
+            })
+            .catch(function (err) {
+                console.log("Something went wrong: ", err.name + ": ", err.message)
+            })
     }
 
     /**
@@ -285,11 +317,14 @@ class App extends Component {
 
                 <Grid>
                     <Row id="topRow">
-                        <Col id="fileComponent" md={9}>
+                        <Col id="fileComponent" md={8}>
                             <CharacterContainer/>
                         </Col>
+                        <Col md={1}>
+                            <OptionalComponents />
+                        </Col>
                         <Col md={3}>
-                            <Video />
+                            <Video id="ownView" />
                         </Col>
                     </Row>
                     <Row>
@@ -301,8 +336,8 @@ class App extends Component {
                         <Col md={6}>
                             <DiceTable username={this.state.loggedIn} />
                         </Col>
-                        <Col md={1}>
-                            <OptionalComponents />
+                        <Col md={3}>
+                            <VideoContainer/>
                         </Col>
                     </Row>
                     <Row>

@@ -59,14 +59,25 @@ var allUsers = []
 io.of('/').on("connection", (socket) => {
     // allClients.push(socket)
     console.log("Client connected.")
+
+    const inFile = fs.createReadStream('video.mp4')
     // socket.emit()
     for(var i = 0; i < allUsers.length; ++i){
         socket.emit("username", allUsers[i])
     }
 
-    streamIO(socket).on('video', (stream, data) => {
-        var filename = path.basename(data.name)
-        stream.pipe(fs.createWriteStream(filename))
+    // streamIO(socket).on('video', (stream, data) => {
+    //     console.log("received video")
+    //     var filename = path.basename(data.name)
+    //     stream.pipe(fs.createWriteStream(filename))
+    // })
+    socket.on("video", (data) => {
+        console.log("received video-data")
+        // socket.broadcast.emit("video", data)
+        // socket.emit("video", data)
+        inFile.addListener('data', (nextData) => {
+            socket.emit('video', nextData)
+        })
     })
 
     socket.on("username", (user) => {
