@@ -23,7 +23,8 @@ app.get("/api/passwords", (req, res) => {
 
     res.json(passwords)
 
-    console.log("Sent ${count} passwords")
+    //console.log("Sent ${count} passwords")
+    console.log(`Sent ${count} passwords`)
 })
 
 app.post("/api/upload", (req, res, next) => {
@@ -39,6 +40,7 @@ app.post("/api/upload", (req, res, next) => {
     //         console.log("file_buffer: ", file_buffer)
     //     })
     // })
+    res.json({value: "Hello World!"})
 })
 
 // app.get('*', (req, res) => {
@@ -105,6 +107,10 @@ io.of('/').on("connection", (socket) => {
         socket.emit("rollDice", data)
     })
 
+    socket.on("mail", (data) => {
+        socket.broadcast.emit("mail", data)
+    })
+
     socket.on("disconnect", () => {
         // socket.broadcast.emit("disconnected")
         console.log("Client disconnected.")
@@ -132,8 +138,7 @@ setInterval(() =>
     io.emit("time", new Date().toTimeString())
 , 1000)
 
-console.log('Password generator listening on ${port}')
-
+console.log(`Password generator listening on ${port}`);
 // var router = express.Router();
 
 

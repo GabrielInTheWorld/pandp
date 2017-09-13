@@ -22,12 +22,12 @@ export default class ChatBox extends React.Component{
     }
 
     componentWillReceiveProps(nextProps){
-        console.log("nextProps in ChatBox: ", nextProps)
+        // console.log("nextProps in ChatBox: ", nextProps)
         this.setState({listMembers: nextProps.listMembers, role: nextProps.role, username: nextProps.username})
     }
 
     getTabs = () => {
-        console.log("getTabs in ChatBox: ", this.state)
+        // console.log("getTabs in ChatBox: ", this.state)
         let tabs = []
 
         for(var i = 0; i < this.state.listMembers.length; ++i){

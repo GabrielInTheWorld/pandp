@@ -7,6 +7,7 @@ import '../style/Components.css'
 
 var isPressing = false
 var socket
+var refList = []
 class EditPage extends Component{
     state = {
         show: false,
@@ -29,6 +30,11 @@ class EditPage extends Component{
      *
      * @param event contains the mousedata
      */
+    close = () => {
+        this.setState({show: false})
+    }
+
+
     onDraw(event) {
         if (isPressing) {
             var canvas = document.getElementById("canvas")
@@ -47,16 +53,14 @@ class EditPage extends Component{
                 <Checkbox key={"checkbox_" + i}
                           inputRef={
                               (ref) => {
-                                  // console.log("this.inputRef: ", ref)
+                                  // this.inputRef = ref
+                                  let reference = refList
+                                  reference.push(ref)
+                                  refList = reference
+                                  console.log("this.inputRef: ", refList)
                               }
                           }
-                          onChange={() => {
-                    // let receivers = this.state.receivers
-                    // receivers.push(this.state.memberList[i])
-                    // this.setState({receivers: receivers})
-
-                    // console.log("receivers: ", this.state.receivers, this.refs["checkbox_" + i].state.checked)
-                }} >{this.state.memberList[i]}</Checkbox>
+                >{this.state.memberList[i]}</Checkbox>
             )
         }
         return elems
@@ -74,10 +78,19 @@ class EditPage extends Component{
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle="primary" onClick={() => {
+                        let receivers = []
+                        // let reference = refList
+                        for(let i = 0; i  < refList.length; ++i){
+                            console.log("elem: ", refList[i])
+                            if(refList[i].checked)
+                                receivers.push(this.state.memberList[i])
+                        }
+                        console.log("receiverList: ", receivers)
                         socket.emit("mail", {
-                            receivingUsers: this.state.receivers,
+                            receivingUsers: receivers,
                             dataURL: document.getElementById("canvas").toDataURL()
                         })
+                        this.setState({showSendDialog: false})
                     }} >Bestätigen</Button>
                     <Button bsStyle="danger" onClick={() => {this.setState({showSendDialog: false})}}>Abbechen</Button>
                 </Modal.Footer>
@@ -116,7 +129,7 @@ class EditPage extends Component{
                             // this.onSend()
                         }}>Senden</Button>
                         <Button bsStyle="primary">Speichern</Button>
-                        <Button bsStyle="danger">Schließen</Button>
+                        <Button bsStyle="danger" onClick={this.close}>Schließen</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
