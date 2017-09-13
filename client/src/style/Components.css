@@ -53,4 +53,54 @@
 .cameraStream{
     border: 1px solid #000000;
     transform: rotateY(180deg);
+    position: relative;
+}
+
+.overlayVideo{
+    /*display: block;*/
+    opacity: 0;
+    background-color: black;
+    /*-webkit-animation: fadein 2s;*/
+    /*-o-animation: fadein 2s;*/
+    /*animation: fadein 2s;*/
+    -webkit-transition: opacity 0.6s ease;
+    -moz-transition: opacity 0.6s ease;
+    -ms-transition: opacity 0.6s ease;
+    -o-transition: opacity 0.6s ease;
+    transition: opacity 0.6s ease;
+    z-index: 100;
+    position: absolute;
+    width: 300px;
+    height: 150px;
+    /*background-image: url("../res/pause.png");*/
+}
+
+/*@keyframes fadein {*/
+    /*from {*/
+        /*opacity: 0;*/
+    /*}*/
+    /*to {*/
+        /*opacity: 0.6;*/
+    /*}*/
+/*}*/
+
+.overlayVideo:hover{
+    /*display: block;*/
+    opacity: 0.5;
+    /*-webkit-animation: fadein 0.9s;*/
+    /*-o-animation: fadein 0.9s;*/
+    /*animation: fadein 0.9s;*/
+}
+
+.overlayVideo > div{
+    /*background-image: url("../res/pause.png");*/
+    /*!*display: inline-block;*!*/
+    /*background-repeat: no-repeat;*/
+    background: url("../res/pause.png") no-repeat center;
+    text-align: center;
+    height: 100%;
+}
+
+.overlayVideo > div:hover{
+    cursor: pointer;
 }

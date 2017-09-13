@@ -21,6 +21,7 @@ import {addUser, createSocket} from './components/actions'
 // const socket = io()
 var socket = null
 var user = ""
+var camera
 class App extends Component {
     state = {
         passwords: [],
@@ -211,7 +212,7 @@ class App extends Component {
         }
         navigator.mediaDevices.getUserMedia(constraints)
             .then(function (mediaStream) {
-                let camera = document.getElementById("ownView")
+                camera = document.getElementById("ownView")
                 camera.srcObject = mediaStream
                 // camera.srcObject.scale(-1, 1)
                 // console.log("this.refs.video: ", document.getElementById("ownView"))
@@ -222,11 +223,16 @@ class App extends Component {
                     username: user,
                     stream: mediaStream
                 }
-                socket.emit("video", data)
+                // socket.emit("video", data)
             })
             .catch(function (err) {
                 console.log("Something went wrong: ", err.name + ": ", err.message)
             })
+    }
+
+    pause = () => {
+        console.log("camera onPause")
+        camera.pause()
     }
 
     /**
@@ -324,7 +330,7 @@ class App extends Component {
                             <OptionalComponents />
                         </Col>
                         <Col md={3}>
-                            <Video id="ownView" />
+                            <Video id="ownView" handleClick={() => this.pause()} />
                         </Col>
                     </Row>
                     <Row>

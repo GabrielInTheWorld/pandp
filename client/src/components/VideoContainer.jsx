@@ -36,15 +36,18 @@ class VideoContainer extends Component{
         //     console.log("mediasource: ", true)
         // else
         //     console.log("mediasource: ", false)
-        let mediaSource = new MediaSource()
-        document.getElementById("source-1").objSource = window.URL.createObjectURL(mediaSource)
-        mediaSource.addEventListener('sourceopen', function(event){
-            let sourceBuffer = mediaSource.addSourceBuffer('<the mimetype and codec, like : video/mp4;codecs="avc1.4d001e,mp4a.40.2" ')
-            socket.on('video', (data) => {
-                console.log("received video-streaming")
-                sourceBuffer.append(new Uint8Array(data))
-            })
-        })
+
+
+        // let mediaSource = new MediaSource()
+        // document.getElementById("source-1").objSource = window.URL.createObjectURL(mediaSource)
+        // mediaSource.addEventListener('sourceopen', function(event){
+        //     let sourceBuffer = mediaSource.addSourceBuffer('<the mimetype and codec, like : video/mp4;codecs="avc1.4d001e,mp4a.40.2" ')
+        //     socket.on('video', (data) => {
+        //         console.log("received video-streaming")
+        //         sourceBuffer.append(new Uint8Array(data))
+        //     })
+        // })
+
 
         // StreamIO(socket).on("video", function(stream){
         //     console.log("VideoContainer - stream: ", stream)

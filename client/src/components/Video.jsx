@@ -53,9 +53,22 @@ class Video extends Component{
 
     }
 
+    onPause = () => {
+        // camera.pause()
+    }
+
+    getOverlay = () => {
+        return (
+            <div className="overlayVideo">
+                <div onClick={this.props.handleClick}></div>
+            </div>
+        )
+    }
+
     render(){
         return(
-            <div>
+            <div style={{position: "absolute"}} >
+                {this.getOverlay()}
                 <video id={this.props.id} className="cameraStream" ></video>
             </div>
         )
