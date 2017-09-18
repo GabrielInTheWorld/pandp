@@ -4,6 +4,7 @@ const http = require("http")
 const generatePassword = require("password-generator")
 // const SocketServer = require('ws').Server
 const socketIO = require("socket.io")
+const p2p = require("socket.io-p2p-server").Server
 const streamIO = require("socket.io-stream")
 const cors = require("cors")
 const formidable = require("formidable")
@@ -56,6 +57,8 @@ app.use((req, res) => res.sendFile(index))
 const server = app.listen(port)
 
 const io = socketIO(server)
+io.use(p2p)
+
 var allClients = []
 var allUsers = []
 io.on("connection", (socket) => {
@@ -67,6 +70,19 @@ io.on("connection", (socket) => {
     for(var i = 0; i < allUsers.length; ++i){
         socket.emit("username", allUsers[i])
     }
+
+    socket.on("peer-msg", (data) => {
+        console.log("peer-msg", data)
+        socket.emit("peer-msg", data)
+    })
+
+    socket.on("ready", (data) => {
+        console.log("message for ready")
+    })
+
+    socket.on("start-stream", (data) => {
+        console.log("get message for start-stream")
+    })
 
     // streamIO(socket).on('video', (stream, data) => {
     //     console.log("received video")

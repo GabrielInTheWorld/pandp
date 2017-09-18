@@ -35,7 +35,8 @@ class App extends Component {
         listItems: [],
         amountOfMembers: 0,
         listMembers: [], //list only with members in chat
-        memberList: [] //list with all members in room
+        memberList: [], //list with all members in room
+        isPaused: false
     }
 
     constructor(props){
@@ -223,7 +224,6 @@ class App extends Component {
                     username: user,
                     stream: mediaStream
                 }
-                // socket.emit("video", data)
             })
             .catch(function (err) {
                 console.log("Something went wrong: ", err.name + ": ", err.message)
@@ -232,7 +232,8 @@ class App extends Component {
 
     pause = () => {
         console.log("camera onPause")
-        camera.pause()
+        this.setState({isPaused: !this.state.isPaused})
+        this.state.isPaused ? camera.pause() : camera.play()
     }
 
     /**

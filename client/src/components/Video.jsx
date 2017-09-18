@@ -9,6 +9,10 @@ import '../style/Components.css'
 // var socket
 var camera
 class Video extends Component{
+    state = {
+        isPaused: false
+    }
+
     constructor(props){
         super(props)
     }
@@ -60,7 +64,10 @@ class Video extends Component{
     getOverlay = () => {
         return (
             <div className="overlayVideo">
-                <div onClick={this.props.handleClick}></div>
+                <div onClick={
+                    this.props.handleClick
+                    // this.setState({isPaused: !this.state.isPaused})
+                }></div>
             </div>
         )
     }

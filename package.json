@@ -41,9 +41,11 @@
     "react-dom": "^15.6.1",
     "serve-favicon": "~2.4.2",
     "socket.io": "^2.0.3",
+    "socket.io-p2p-server": "^1.2.0",
     "socket.io-stream": "^0.9.1",
     "url": "^0.11.0",
     "utf-8-validate": "3.0.3",
+    "webrtc-adapter": "^5.0.4",
     "ws": "3.1.0"
   }
 }
