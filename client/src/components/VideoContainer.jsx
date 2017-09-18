@@ -4,7 +4,7 @@ import * as StreamIO from 'socket.io-stream'
 import * as P2P from 'socket.io-p2p'
 import SimpleWebRTC from 'simplewebrtc'
 import * as Peer from 'simple-peer'
-import wrtc from 'wrtc'
+import *as wrtc from 'wrtc'
 
 import {ButtonGroup, Button} from 'react-bootstrap'
 
@@ -46,16 +46,18 @@ class VideoContainer extends Component{
     componentDidMount(){
         socket = this.props.socket
         console.log("VideoContainer - componentDidMount(): ", socket)
-        webrtc = new SimpleWebRTC({
-            localVideoEl: '',
-            remoteVideosEl: "remoteVideos",
-            autoRequestMedia: true,
-            connection: socket,
-            socketio: socket
-        })
+        // webrtc = new SimpleWebRTC({
+        //     localVideoEl: '',
+        //     remoteVideosEl: "remoteVideos",
+        //     autoRequestMedia: true,
+        //     connection: socket,
+        //     socketio: socket
+        // })
+        //
+        // // this.startStream()
+        // console.log("stream: ", stream, "\np2p: ", webrtc)
 
-        // this.startStream()
-        console.log("stream: ", stream, "\np2p: ", webrtc)
+        navigator.getUserMedia(constraints, this.gotMedia, () => {})
 
         this.handleReceiveMessage()
         // p2p = new P2P(socket, peerOptions)
@@ -93,6 +95,29 @@ class VideoContainer extends Component{
 
     }
 
+    gotMedia = (stream) => {
+        console.log("Hello World")
+        peer = new Peer({initiator: true, stream: stream})
+        var peer2 = new Peer({})
+
+        peer.on('signal', (data) => {
+            console.log("got signalstream in VideoContainer")
+            peer2.signal(data)
+        })
+
+        peer2.on('signal', (data) =>{
+            console.log("got signal in VideoContainer")
+            peer.signal(data)
+        })
+
+        peer2.on('stream', (stream) => {
+            console.log("got stream in VideoContainer")
+            var video = document.getElementById("remoting")
+            video.src = window.URL.createObjectURL(stream)
+            video.play()
+        })
+    }
+
     startStream = () => {
         // const peerOptions = {
         //     peerOpts: {
@@ -100,10 +125,12 @@ class VideoContainer extends Component{
         //     }
         // }
 
-        webrtc.on('readyToCall', () => {
-            console.log("webrtc will connect to room")
-            webrtc.joinRoom('crazyShit')
-        })
+        console.log("clicked")
+
+        // webrtc.on('readyToCall', () => {
+        //     console.log("webrtc will connect to room")
+        //     webrtc.joinRoom('crazyShit')
+        // })
 
         // navigator.mediaDevices.getUserMedia(constraints)
         //     .then(function(mediaStream) {
@@ -144,6 +171,7 @@ class VideoContainer extends Component{
         return(
             <div>
                 <div id="remoteVideos"></div>
+                <video id="remoting"></video>
                 <ButtonGroup vertical>
                     <Button onClick={() => this.startStream()}>Send Data</Button>
                 </ButtonGroup>
