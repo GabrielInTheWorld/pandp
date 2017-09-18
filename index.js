@@ -4,8 +4,8 @@ const http = require("http")
 const generatePassword = require("password-generator")
 // const SocketServer = require('ws').Server
 const socketIO = require("socket.io")
-const p2p = require("socket.io-p2p-server").Server
-const streamIO = require("socket.io-stream")
+// const p2p = require("socket.io-p2p-server").Server
+// const streamIO = require("socket.io-stream")
 const cors = require("cors")
 const formidable = require("formidable")
 const fs = require("fs")
@@ -57,7 +57,7 @@ app.use((req, res) => res.sendFile(index))
 const server = app.listen(port)
 
 const io = socketIO(server)
-io.use(p2p)
+// io.use(p2p)
 
 var allClients = []
 var allUsers = []
@@ -71,18 +71,18 @@ io.on("connection", (socket) => {
         socket.emit("username", allUsers[i])
     }
 
-    socket.on("peer-msg", (data) => {
-        console.log("peer-msg", data)
-        socket.emit("peer-msg", data)
-    })
-
-    socket.on("ready", (data) => {
-        console.log("message for ready")
-    })
-
-    socket.on("start-stream", (data) => {
-        console.log("get message for start-stream")
-    })
+    // socket.on("peer-msg", (data) => {
+    //     console.log("peer-msg", data)
+    //     socket.emit("peer-msg", data)
+    // })
+    //
+    // socket.on("ready", (data) => {
+    //     console.log("message for ready")
+    // })
+    //
+    // socket.on("start-stream", (data) => {
+    //     console.log("get message for start-stream")
+    // })
 
     // streamIO(socket).on('video', (stream, data) => {
     //     console.log("received video")
@@ -114,6 +114,8 @@ io.on("connection", (socket) => {
         console.log("received role: ", data)
         socket.emit("Role", data.role)
         if(data.role === "Meister"){
+            console.log("role is master")
+            socket.emit("masterIsChosen", data.username)
             socket.broadcast.emit("masterIsChosen", data.username)
         }
     })
@@ -125,6 +127,10 @@ io.on("connection", (socket) => {
 
     socket.on("mail", (data) => {
         socket.broadcast.emit("mail", data)
+    })
+
+    socket.on("sendSignal", (data) => {
+        socket.broadcast.emit("receiveSignal", data)
     })
 
     socket.on("disconnect", () => {

@@ -1,36 +1,38 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import * as StreamIO from 'socket.io-stream'
-import * as P2P from 'socket.io-p2p'
-import SimpleWebRTC from 'simplewebrtc'
+// import * as StreamIO from 'socket.io-stream'
+// import * as P2P from 'socket.io-p2p'
+// import SimpleWebRTC from 'simplewebrtc'
 import * as Peer from 'simple-peer'
-import *as wrtc from 'wrtc'
+// import *as wrtc from 'wrtc'
 
 import {ButtonGroup, Button} from 'react-bootstrap'
 
 import Video from './Video'
 
 var socket
-var stream = StreamIO.createStream()
-var webrtc
+// var stream = StreamIO.createStream()
+// var webrtc
 var peer
 // var p2p
-const constraints = {
-    audio: true,
-    video: {
-        width: {ideal: 300},
-        height: {ideal: 150}
-    }
-}
+// const constraints = {
+//     audio: true,
+//     video: {
+//         width: {ideal: 300},
+//         height: {ideal: 150}
+//     }
+// }
 // const peerOptions = {
 //     peerOpts: {
 //         numClients: 10
 //     }
 // }
+var isInitiator = false
+var bufferSignal
 class VideoContainer extends Component{
 
     state = {
-
+        // isInitiator: false
     }
 
     constructor(props){
@@ -45,7 +47,7 @@ class VideoContainer extends Component{
 
     componentDidMount(){
         socket = this.props.socket
-        console.log("VideoContainer - componentDidMount(): ", socket)
+        console.log("VideoContainer - componentDidMount(): ", socket, this.props)
         // webrtc = new SimpleWebRTC({
         //     localVideoEl: '',
         //     remoteVideosEl: "remoteVideos",
@@ -57,13 +59,102 @@ class VideoContainer extends Component{
         // // this.startStream()
         // console.log("stream: ", stream, "\np2p: ", webrtc)
 
-        navigator.getUserMedia(constraints, this.gotMedia, () => {})
+        // console.log("navigator.getUserMedia: ", navigator.mediaDevices.getUserMedia(constraints))
+        // navigator.mediaDevices.enumerateDevices()
+        //     .then((devices) => {
+        //         devices.forEach((device) => {
+        //             console.log(device.kind + ": " + device.label + " id = " + device.deviceId)
+        //             if(device.kind === "videoinput"){
+        //                 console.log("videoinput found")
+        //                 // return
+        //             }
+        //         })
+        //     })
+        // navigator.mediaDevices.getUserMedia(constraints, this.gotMedia, () => {})
 
         this.handleReceiveMessage()
         // p2p = new P2P(socket, peerOptions)
+        // socket.on("masterIsChosen", (data) => {
+        //     console.log("masterIsChosen: ", data)
+        // })
     }
 
+    componentWillReceiveProps(nextProps){
+        console.log("VideoContainer - nextProps: ", nextProps)
+        // this.setState({isInitiator: nextProps.initiator})
+        isInitiator = nextProps.initiator
+        this.initiateStream()
+    }
+
+    initiateStream = () => {
+        // let hasVideo
+        // navigator.mediaDevices.enumerateDevices()
+        //     .then((devices) => {
+        //         devices.forEach((device) => {
+        //             console.log(device.kind + ": " + device.label + " id = " + device.deviceId)
+        //             if(device.kind === "videoinput"){
+        //                 // console.log("videoinput found")
+        //                 hasVideo = {
+        //                     width: {ideal: 300},
+        //                     height: {ideal: 150}
+        //                 }
+        //                 // return
+        //             }else{
+        //                 hasVideo = false
+        //             }
+        //         })
+        //     })
+
+        const constraints = {
+            audio: true,
+            video: {
+                width: {ideal: 300},
+                height: {ideal: 150}
+            }
+        }
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                console.log("getUserMedia: ", constraints)
+                this.gotMedia(stream)
+            })
+            .catch((error) =>{
+                console.log("Something went wrong: ", error)
+            })
+    }
+
+    // getVideoConstraint(){
+    //     let hasVideo
+    //     navigator.mediaDevices.enumerateDevices()
+    //         .then((devices) => {
+    //             devices.forEach((device) => {
+    //                 console.log(device.kind + ": " + device.label + " id = " + device.deviceId)
+    //                 if(device.kind === "videoinput"){
+    //                     // console.log("videoinput found")
+    //                     hasVideo = {
+    //                         width: {ideal: 300},
+    //                         height: {ideal: 150}
+    //                     }
+    //                     // return
+    //                 }else{
+    //                     hasVideo = false
+    //                 }
+    //             })
+    //         })
+    //     console.log("getVideoConstraint")
+    //     return hasVideo
+    // }
+
     handleReceiveMessage(){
+        socket.on("receiveSignal", (data) => {
+            console.log("receivedSignal: ", data)
+            if(peer){
+                peer.signal(JSON.parse(data))
+            }else{
+                bufferSignal = data
+            }
+        })
+
         // p2p.on("peer-msg", (data) => {
         //     console.log("peer-msg: ", data)
         // })
@@ -97,25 +188,43 @@ class VideoContainer extends Component{
 
     gotMedia = (stream) => {
         console.log("Hello World")
-        peer = new Peer({initiator: true, stream: stream})
-        var peer2 = new Peer({})
+        peer = new Peer({initiator: isInitiator, stream: stream, trickle: false})
+        // var peer2 = new Peer({})
+        // var peer3 = new Peer({})
 
         peer.on('signal', (data) => {
-            console.log("got signalstream in VideoContainer")
-            peer2.signal(data)
+            console.log("got signalstream in VideoContainer", data)
+            // peer.signal(data)
+            // peer2.signal(data)
+            socket.emit("sendSignal", JSON.stringify(data))
         })
 
-        peer2.on('signal', (data) =>{
-            console.log("got signal in VideoContainer")
-            peer.signal(data)
-        })
+        if(bufferSignal){
+            console.log("bufferSignal is buffering data: ", bufferSignal)
+            peer.signal(JSON.parse(bufferSignal))
+        }
+        // peer2.on('signal', (data) =>{
+        //     console.log("got signal in VideoContainer")
+        //     peer.signal(data)
+        // })
 
-        peer2.on('stream', (stream) => {
-            console.log("got stream in VideoContainer")
-            var video = document.getElementById("remoting")
+        peer.on("stream", (stream) => {
+            console.log("got stream for peer1")
+            let video = document.getElementById("remoting")
             video.src = window.URL.createObjectURL(stream)
             video.play()
         })
+
+        // peer2.on('stream', (stream) => {
+        //     console.log("got stream in VideoContainer")
+        //     var video = document.getElementById("remoting")
+        //     video.src = window.URL.createObjectURL(stream)
+        //     video.play()
+        // })
+        //
+        // peer3.on("stream", (stream) => {
+        //     console.log("got stream for peer3")
+        // })
     }
 
     startStream = () => {
@@ -126,7 +235,6 @@ class VideoContainer extends Component{
         // }
 
         console.log("clicked")
-
         // webrtc.on('readyToCall', () => {
         //     console.log("webrtc will connect to room")
         //     webrtc.joinRoom('crazyShit')

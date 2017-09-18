@@ -36,7 +36,8 @@ class App extends Component {
         amountOfMembers: 0,
         listMembers: [], //list only with members in chat
         memberList: [], //list with all members in room
-        isPaused: false
+        isPaused: false,
+        isMaster: false
     }
 
     constructor(props){
@@ -100,11 +101,16 @@ class App extends Component {
         })
 
         socket.on("Role", (role) => {
+            console.log("role chosen: ", role)
             this.setState({showGamerDialog: false, role: role})
         })
 
         socket.on("masterIsChosen", (user) => {
-            this.setState({master: user})
+            console.log("master is: ", user)
+            if(this.state.loggedIn === user){
+                this.setState({isMaster: true, master: user})
+            }else
+                this.setState({master: user})
         })
 
         socket.on("rollDice", (data) => {
@@ -344,7 +350,7 @@ class App extends Component {
                             <DiceTable username={this.state.loggedIn} />
                         </Col>
                         <Col md={3}>
-                            <VideoContainer/>
+                            <VideoContainer initiator={this.state.isMaster} role={this.state.role} />
                         </Col>
                     </Row>
                     <Row>
