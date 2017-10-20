@@ -11,6 +11,10 @@ const formidable = require("formidable")
 const fs = require("fs")
 const busBoy = require("connect-busboy")
 
+// storage sdk
+const dropbox = require('dropbox')
+const cloudrail = require('cloudrail-si')
+
 const app = express()
 
 app.use(express.static(path.join(__dirname, "/client/build")))

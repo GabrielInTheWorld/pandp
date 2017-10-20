@@ -15,6 +15,8 @@ import OptionalComponents from './components/OptionalComponents'
 import Video from './components/Video'
 import VideoContainer from './components/VideoContainer'
 
+import Storage from './cloud/Storage'
+
 import {addUser, createSocket} from './components/actions'
 // import CloseButton from "react-error-overlay/lib/components/CloseButton";
 // self = null
@@ -191,6 +193,9 @@ class App extends Component {
             socket.emit("username", this.state.username)
             this.setState({loggedIn: this.state.username})
             user = this.state.loggedIn
+
+            var storage = new Storage(this.state.username)
+
             this.onClose()
             this.openGamerDialog()
             this.play()
