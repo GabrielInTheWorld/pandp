@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import * as stream from 'socket.io-stream'
-import {connect} from 'react-redux'
-
-import {Button} from 'react-bootstrap'
+// import * as stream from 'socket.io-stream'
+// import {connect} from 'react-redux'
+//
+// import {Button} from 'react-bootstrap'
 
 import '../style/Components.css'
 
