@@ -22,3 +22,10 @@ export const receiveMessage = (message, receiver) => {
         receiver: receiver
     }
 }
+
+export const createStorage = (storage) => {
+    return{
+        type: 'create_storage',
+        newStorage: storage
+    }
+}

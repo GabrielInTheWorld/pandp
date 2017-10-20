@@ -8,15 +8,17 @@ import io from 'socket.io-client'
 import { Provider } from 'react-redux'
 
 import configureStore from './components/store/configureStore'
-// import {createSocket} from './components/actions'
+
+import Storage from './cloud/Storage'
+
+let storage = new Storage()
 
 const store = configureStore({
     socket: io(),
-    members: []
+    members: [],
+    storage: storage
 })
 
-// const socket = io()/*
-// createSocket(socket)*/
 
 ReactDOM.render(
     <Provider store={store}>

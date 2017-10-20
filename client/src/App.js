@@ -194,7 +194,8 @@ class App extends Component {
             this.setState({loggedIn: this.state.username})
             user = this.state.loggedIn
 
-            var storage = new Storage(this.state.username)
+            // var storage = new Storage(this.state.username)
+            this.props.storage.setUsername(this.state.username)
 
             this.onClose()
             this.openGamerDialog()
@@ -382,7 +383,8 @@ const mapStateToProps = (state, ownProps) => {
     // console.log("mapstatetoprops: ", state, ownProps)
     return {
         socket: state.socket,
-        members: state.members
+        members: state.members,
+        storage: state.storage
     }
 }
 
